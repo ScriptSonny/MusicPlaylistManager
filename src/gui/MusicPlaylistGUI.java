@@ -3,7 +3,7 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import model.Song;
+import song.Song;
 import java.util.ArrayList;
 import java.util.List;
 
