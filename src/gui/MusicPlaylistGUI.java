@@ -22,22 +22,22 @@ public class MusicPlaylistGUI extends JFrame
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Playlist weergave
+        // Display playlist
         playlistModel = new DefaultListModel<>();
         playlistDisplay = new JList<>(playlistModel);
         JScrollPane scrollPane = new JScrollPane(playlistDisplay);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Control paneel
+        // Control panel
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new GridLayout(2, 3, 10, 10));
 
-        loadButton = new JButton("📂 Laad Playlist");
-        sortButton = new JButton("🔀 Sorteer");
+        loadButton = new JButton("📂 Load Playlist");
+        sortButton = new JButton("🔀 Sort");
         shuffleButton = new JButton("🎲 Shuffle");
-        playButton = new JButton("▶ Afspelen");
+        playButton = new JButton("▶ Play");
         searchField = new JTextField(10);
-        searchButton = new JButton("🔍 Zoek");
+        searchButton = new JButton("🔍 Search");
 
         controlPanel.add(loadButton);
         controlPanel.add(sortButton);
@@ -48,33 +48,33 @@ public class MusicPlaylistGUI extends JFrame
 
         add(controlPanel, BorderLayout.SOUTH);
 
-        // Voeg dummydata toe met playlist knop
+        // Add dummy data with play button
         loadButton.addActionListener(e -> selectAndLoadFile());
     }
 
     private void selectAndLoadFile()
     {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Selecteer een dataset (CSV of JSON");
+        fileChooser.setDialogTitle("Select dataset (CSV or JSON");
         int result = fileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION)
         {
             File selectedFile = fileChooser.getSelectedFile();
-            JOptionPane.showMessageDialog(this, "Geselecteerd bestand: " + selectedFile.getName());
+            JOptionPane.showMessageDialog(this, "Selected file: " + selectedFile.getName());
 
-            //TODO voeg import functie toe
+            //TODO add import function
             loadDataFromFile(selectedFile);
         }
     }
 
     private void loadDataFromFile(File file)
     {
-        // Simulatie van het importeren van data
+        // Simulation of importing the data
         playlistModel.clear();
         List<Song> songs = new ArrayList<>();
 
-        JOptionPane.showMessageDialog(this, "🎧 Dataset geladen vanuit: " + file.getName());
+        JOptionPane.showMessageDialog(this, "🎧 Dataset loaded from: " + file.getName());
     }
 
     public static void main(String[] args)

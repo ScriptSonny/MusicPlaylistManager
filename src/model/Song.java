@@ -6,8 +6,8 @@ public class Song
     private String artist;
     private String album;
     private String genre;
-    private int duration; // seconden
-    private int popularity; // 0 - 100
+    private int duration; // In seconds
+    private int popularity; // Range from 0 to 100
 
     public Song(String title, String artist, String album, String genre, int duration, int popularity)
     {
