@@ -2,6 +2,9 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import model.Song;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MusicPlaylistGUI extends JFrame
@@ -46,16 +49,32 @@ public class MusicPlaylistGUI extends JFrame
         add(controlPanel, BorderLayout.SOUTH);
 
         // Voeg dummydata toe met playlist knop
-        loadButton.addActionListener(e ->
+        loadButton.addActionListener(e -> selectAndLoadFile());
+    }
+
+    private void selectAndLoadFile()
+    {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Selecteer een dataset (CSV of JSON");
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION)
         {
-            playlistModel.clear();
-            List<String> songs = DummyData.getDummyPlaylist();
-            for (String song : songs)
-            {
-                playlistModel.addElement(song);
-            }
-            JOptionPane.showMessageDialog(this, "🎧 Dummy Playlist geladen!");
-        });
+            File selectedFile = fileChooser.getSelectedFile();
+            JOptionPane.showMessageDialog(this, "Geselecteerd bestand: " + selectedFile.getName());
+
+            //TODO voeg import functie toe
+            loadDataFromFile(selectedFile);
+        }
+    }
+
+    private void loadDataFromFile(File file)
+    {
+        // Simulatie van het importeren van data
+        playlistModel.clear();
+        List<Song> songs = new ArrayList<>();
+
+        JOptionPane.showMessageDialog(this, "🎧 Dataset geladen vanuit: " + file.getName());
     }
 
     public static void main(String[] args)
