@@ -1,6 +1,6 @@
 package song;
 
-import collection.DoublyLinkedList;
+import collection.doublylinkedlist.DoublyLinkedList;
 
 public abstract class SongContainer
 {
