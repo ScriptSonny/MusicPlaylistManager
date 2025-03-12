@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import song.Song;
+import utils.DataImporter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +75,29 @@ public class MusicPlaylistGUI extends JFrame
         // Simulation of importing the data
         playlistModel.clear();
         List<Song> songs = new ArrayList<>();
+
+        if (file.getName().endsWith(".csv"))
+        {
+            songs = DataImporter.loadSongsFromCSV(file);
+        } else if (file.getName().endsWith(".json"))
+        {
+            songs = DataImporter.loadSongsFromJSON(file);
+        } else
+        {
+            JOptionPane.showMessageDialog(this, "❌ Invalid filetype. Choose a CSV or JSON file.");
+            return;
+        }
+
+        if (songs.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "⚠ No valid data found in file!");
+            return;
+        }
+
+        for (Song song : songs)
+        {
+            playlistModel.addElement(song.toString());
+        }
 
         JOptionPane.showMessageDialog(this, "🎧 Dataset loaded from: " + file.getName());
     }
