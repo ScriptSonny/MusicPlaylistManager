@@ -1,15 +1,18 @@
 package search;
 
+import song.SearchResult;
+import song.Song;
 import song.SongContainer;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 public class BinarySearch implements SearchMethod
 {
     @Override
-    public <T extends SongContainer> T search(String query, T songs) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
+    public SearchResult search(String query, Collection<Song> songs)
     {
-        T validSongs = (T) songs.getClass().getDeclaredConstructor().newInstance();
+        SearchResult validSongs = new SearchResult();
         return validSongs;
     }
 }

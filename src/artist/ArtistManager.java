@@ -14,11 +14,11 @@ public class ArtistManager
     
     public static ArtistManager getInstance()
     {
-        if (instance == null)
+        if (ArtistManager.instance == null)
         {
-            instance = new ArtistManager();
+            ArtistManager.instance = new ArtistManager();
         }
-        return instance;
+        return ArtistManager.instance;
     }
     
     public HashSet<Artist> getArtists()
