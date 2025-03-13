@@ -4,6 +4,7 @@ import song.Song;
 import song.SongContainer;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 
 public class LinearSearch implements SearchMethod
 {

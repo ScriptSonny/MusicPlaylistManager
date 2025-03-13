@@ -1,6 +1,6 @@
 package artist;
 
-import collection.HashSet;
+import collection.hashset.HashSet;
 
 public class ArtistManager
 {
