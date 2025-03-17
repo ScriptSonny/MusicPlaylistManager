@@ -4,9 +4,6 @@ import artist.Artist;
 import song.Genre;
 import song.Song;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -46,32 +43,6 @@ public class DataImporter
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        return songs;
-    }
-
-
-    // JSON importfunction
-    public static List<Song> loadSongsFromJSON(File file)
-    {
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Song> songs = new ArrayList<>();
-        try
-        {
-            // turn JSON into a list of song objects
-            songs = objectMapper.readValue(file, new TypeReference<List<Song>>() {});
-            for (Song song : songs)
-            {
-                // Check if artist and genre are correct
-                song.setArtist(new Artist(song.getArtist().getName()));
-                song.setGenre(Genre.valueOf(song.getGenre().name()));
-            }
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e)
-        {
-            System.out.println("Invalid Genre in JSON-file");
         }
         return songs;
     }
