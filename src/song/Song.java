@@ -1,6 +1,7 @@
 package song;
 
 import artist.Artist;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Song
 {
@@ -10,8 +11,17 @@ public class Song
     private int duration; // In seconds
     private int popularity; // Range from 0 to 100
 
-    public Song(String title, Artist artist, Genre genre, int duration, int popularity)
+    public Song()
     {
+
+    }
+
+    public Song(
+            @JsonProperty("title") String title,
+            @JsonProperty("artist") Artist artist,
+            @JsonProperty("genre") Genre genre,
+            @JsonProperty("duration") int duration,
+            @JsonProperty("popularity") int popularity) {
         this.title = title;
         this.artist = artist;
         this.genre = genre;
