@@ -1,6 +1,6 @@
 package gui;
 
-import collection.BinarySearchTree;
+import collection.binarysearchtree.BinarySearchTree;
 import collection.doublylinkedlist.DoublyLinkedList;
 import search.BinarySearch;
 import search.LinearSearch;

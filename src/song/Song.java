@@ -2,7 +2,7 @@ package song;
 
 import artist.Artist;
 
-public class Song
+public class Song implements Comparable<Song>
 {
     private String title;
     private Artist artist;
@@ -73,5 +73,11 @@ public class Song
     public String toString()
     {
         return "🎵 " + getTitle() + " - " + getArtist().getName();
+    }
+    
+    @Override
+    public int compareTo(Song o)
+    {
+        return o.getPopularity() - this.popularity;
     }
 }
