@@ -12,13 +12,15 @@ import song.SongDispenser;
 import utils.DataImporter;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MusicPlaylistGUI extends JFrame
 {
@@ -27,6 +29,12 @@ public class MusicPlaylistGUI extends JFrame
     private JList<String> playlistDisplay;
     private DefaultListModel<String> playlistModel;
     private Collection<Song> selectedDataStructure;
+    private JLabel nowPlayingLabel;
+    private Timer playTimer;
+    private boolean isPaused = false;
+    private AtomicInteger index = new AtomicInteger(0); // Track song index
+    private AtomicInteger remainingDuration = new AtomicInteger(0); // Track remaining duration
+    private boolean playingSong = false;
 
 
     public MusicPlaylistGUI()
@@ -43,20 +51,23 @@ public class MusicPlaylistGUI extends JFrame
         JScrollPane scrollPane = new JScrollPane(playlistDisplay);
         add(scrollPane, BorderLayout.CENTER);
 
+        // Statuslabel to display current number
+        nowPlayingLabel = new JLabel("Now Playing: None");
+        nowPlayingLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        add(nowPlayingLabel, BorderLayout.NORTH);
+
         // Control panel
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new GridLayout(2, 3, 10, 10));
 
         loadButton = new JButton("📂 Load Playlist");
         sortButton = new JButton("🔀 Sort");
-        shuffleButton = new JButton("🎲 Shuffle");
         playButton = new JButton("▶ Play");
         searchField = new JTextField(10);
         searchButton = new JButton("🔍 Search");
 
         controlPanel.add(loadButton);
         controlPanel.add(sortButton);
-        controlPanel.add(shuffleButton);
         controlPanel.add(playButton);
         controlPanel.add(searchField);
         controlPanel.add(searchButton);
@@ -65,6 +76,7 @@ public class MusicPlaylistGUI extends JFrame
 
         loadButton.addActionListener(e -> selectDataStructureAndLoadFile());
         searchButton.addActionListener(e -> searchFromData(searchField.getText()));
+        playButton.addActionListener(e -> playSongs());
     }
 
     /**
@@ -224,6 +236,81 @@ public class MusicPlaylistGUI extends JFrame
         {
             playlistModel.addElement(iterator.next().toString());
         }
+    }
+
+    /**
+     * Simulates the playing of songs in displayed order
+     */
+    private void playSongs() {
+        if (playlistModel.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No songs to play!");
+            return;
+        }
+
+        // If already playing, toggle pause
+        if (playTimer != null && playTimer.isRunning()) {
+            playTimer.stop();
+            isPaused = true;
+            nowPlayingLabel.setText("Paused: " + playlistModel.get(index.get()) + " (" + remainingDuration.get() + "s left)");
+            return;
+        }
+
+        isPaused = false;
+
+        playTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!playingSong) {
+                    // Start next song if no song is currently playing
+                    if (index.get() >= playlistModel.getSize()) {
+                        playTimer.stop();
+                        nowPlayingLabel.setText("Playlist finished!");
+                        return;
+                    }
+
+                    String songText = playlistModel.get(index.get());
+                    Song currentSong = findSongByText(songText);
+
+                    if (currentSong != null) {
+                        remainingDuration.set(remainingDuration.get() == 0 ? currentSong.getDuration() : remainingDuration.get());
+                        nowPlayingLabel.setText("Now Playing: " + currentSong.getTitle() + " (" + remainingDuration.get() + "s left)");
+                        playingSong = true;
+                    }
+                } else {
+                    // Countdown and update display
+                    remainingDuration.getAndDecrement();
+                    if (remainingDuration.get() <= 0) {
+                        playingSong = false;
+                        remainingDuration.set(0);
+                        index.incrementAndGet(); // Move to next song
+                    } else {
+                        nowPlayingLabel.setText("Now Playing: " + playlistModel.get(index.get()) + " (" + remainingDuration.get() + "s left)");
+                    }
+                }
+            }
+        });
+
+        playTimer.setInitialDelay(0);
+        playTimer.start();
+    }
+
+    /**
+     * Searches Song-object that equals with the text in the list
+     * @param songText text to search for
+     * @return found Song object
+     */
+    private Song findSongByText(String songText)
+    {
+        if (selectedDataStructure == null) return null;
+
+        for (Song song : selectedDataStructure)
+        {
+            if (song.toString().equals(songText))
+            {
+                return song;
+            }
+        }
+        return null;
     }
 
     public static void main(String[] args)

@@ -1,7 +1,6 @@
 package song;
 
 import artist.Artist;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Song implements Comparable<Song>
 {
@@ -16,12 +15,8 @@ public class Song implements Comparable<Song>
 
     }
 
-    public Song(
-            @JsonProperty("title") String title,
-            @JsonProperty("artist") Artist artist,
-            @JsonProperty("genre") Genre genre,
-            @JsonProperty("duration") int duration,
-            @JsonProperty("popularity") int popularity) {
+    public Song(String title, Artist artist, Genre genre, int duration, int popularity)
+    {
         this.title = title;
         this.artist = artist;
         this.genre = genre;
