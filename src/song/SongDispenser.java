@@ -1,5 +1,6 @@
 package song;
 
+import search.BinarySearch;
 import search.SearchMethod;
 import sorting.SortingMethod;
 
@@ -36,7 +37,11 @@ public class SongDispenser
     // Methods
     public SearchResult search(String query, SearchMethod method)
     {
-        return method.search(query, songContainer.getSongs().toBST());
+        if (method instanceof BinarySearch) {
+            return method.search(query, songContainer.getSongs().toBST());
+        } else {
+            return method.search(query, songContainer.getSongs());
+        }
     }
 
     public SortResult sort(SortingMethod method)
