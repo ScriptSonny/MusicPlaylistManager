@@ -1,6 +1,6 @@
 package song;
 
-import collection.DoublyLinkedList;
+import collection.doublylinkedlist.DoublyLinkedList;
 
 public abstract class SongContainer
 {
@@ -8,6 +8,7 @@ public abstract class SongContainer
     
     public SongContainer()
     {
+        this.songs = new DoublyLinkedList<>();
     }
     
     public DoublyLinkedList<Song> getSongs()
@@ -23,5 +24,13 @@ public abstract class SongContainer
     public void appendSong(Song newSong)
     {
         this.songs.add(newSong);
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "SongContainer{" +
+                "songs=" + this.songs.toString() +
+                '}';
     }
 }

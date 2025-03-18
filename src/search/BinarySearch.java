@@ -1,15 +1,35 @@
 package search;
 
-import song.SongContainer;
+import artist.Artist;
+import collection.binarysearchtree.BinarySearchTree;
+import collection.binarysearchtree.Node;
+import song.SearchResult;
+import song.Song;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 public class BinarySearch implements SearchMethod
 {
     @Override
-    public <T extends SongContainer> T search(String query, T songs) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
+    public <T extends Collection<Song>> SearchResult search(String query, T songs)
     {
-        T validSongs = (T) songs.getClass().getDeclaredConstructor().newInstance();
+        SearchResult validSongs = new SearchResult();
+        if (!(songs instanceof BinarySearchTree<?>))
+        {
+            throw new IllegalArgumentException("Song parameter has to be BinarySearchTree");
+        }
+        BinarySearchTree<Song> bst = (BinarySearchTree<Song>) songs;
+        Song searchSong = new Song();
+        searchSong.setTitle(query);
+        searchSong.setDuration(Integer.parseInt(query));
+        searchSong.setPopularity(Integer.parseInt(query));
+        searchSong.setArtist(new Artist(query));
+        Node<Song> foundSong = bst.findNode(bst.getRoot(), searchSong);
+        if (foundSong == null)
+        {
+            return validSongs;
+        }
+        validSongs.appendSong(foundSong.getData());
         return validSongs;
     }
 }

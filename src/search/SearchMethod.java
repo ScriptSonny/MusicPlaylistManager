@@ -1,10 +1,11 @@
 package search;
 
-import song.SongContainer;
+import song.SearchResult;
+import song.Song;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 public interface SearchMethod
 {
-    public abstract <T extends SongContainer> T search(String query, T songs) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException;
+    public abstract <T extends Collection<Song>> SearchResult search(String query, T songs);
 }

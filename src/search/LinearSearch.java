@@ -1,19 +1,25 @@
 package search;
 
+import song.SearchResult;
 import song.Song;
-import song.SongContainer;
+import utils.StringQueryComparator;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 public class LinearSearch implements SearchMethod
 {
     @Override
-    public <T extends SongContainer> T search(String query, T songs) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
+    public <T extends Collection<Song>> SearchResult search(String query, T songs)
     {
-        T validSongs = (T) songs.getClass().getDeclaredConstructor().newInstance();
-        for (Song song : songs.getSongs())
+        SearchResult validSongs = new SearchResult();
+        if (songs == null)
         {
-            if (song.getTitle().compareTo(query) > 0) {
+            return validSongs;
+        }
+        for (Song song : songs)
+        {
+            if (StringQueryComparator.compare(song.getTitle(), query) || StringQueryComparator.compare(song.getArtist().getName(), query))
+            {
                 validSongs.appendSong(song);
             }
         }
