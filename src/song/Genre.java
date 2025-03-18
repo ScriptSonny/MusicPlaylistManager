@@ -5,6 +5,7 @@ public enum Genre
     POP,
     ROCK,
     METAL,
+    RAP,
     HOUSE,
     TECHNO;
 

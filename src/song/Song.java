@@ -76,7 +76,8 @@ public class Song implements Comparable<Song>
     }
 
     @Override
-    public int compareTo(Song other) {
-        return this.title.compareTo(other.title);
+    public int compareTo(Song o)
+    {
+        return o.getPopularity() - this.popularity;
     }
 }

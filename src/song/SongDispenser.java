@@ -36,7 +36,7 @@ public class SongDispenser
     // Methods
     public SearchResult search(String query, SearchMethod method)
     {
-        return method.search(query, songContainer.getSongs());
+        return method.search(query, songContainer.getSongs().toBST());
     }
 
     public SortResult sort(SortingMethod method)

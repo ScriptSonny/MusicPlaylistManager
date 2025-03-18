@@ -1,12 +1,11 @@
 package collection.doublylinkedlist;
 
-import collection.BinarySearchTree;
+import collection.binarysearchtree.BinarySearchTree;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
-public class DoublyLinkedList<T> implements Collection<T>
+public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T>
 {
     private Node<T> head;
     private Node<T> tail;
@@ -18,8 +17,9 @@ public class DoublyLinkedList<T> implements Collection<T>
     
     public BinarySearchTree<T> toBST()
     {
-        // TODO
-        return new BinarySearchTree<T>();
+        BinarySearchTree<T> tree = new BinarySearchTree<T>();
+        tree.addAll(this);
+        return tree;
     }
     
     @Override
