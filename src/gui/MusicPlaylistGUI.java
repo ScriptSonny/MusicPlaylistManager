@@ -1,17 +1,23 @@
 package gui;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-
 import collection.BinarySearchTree;
-import collection.DoublyLinkedList;
+import collection.doublylinkedlist.DoublyLinkedList;
+import search.BinarySearch;
+import search.LinearSearch;
+import search.SearchMethod;
+import song.Playlist;
+import song.SearchResult;
 import song.Song;
+import song.SongDispenser;
 import utils.DataImporter;
 
-import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 public class MusicPlaylistGUI extends JFrame
@@ -58,6 +64,7 @@ public class MusicPlaylistGUI extends JFrame
         add(controlPanel, BorderLayout.SOUTH);
 
         loadButton.addActionListener(e -> selectDataStructureAndLoadFile());
+        searchButton.addActionListener(e -> searchFromData(searchField.getText()));
     }
 
     /**
@@ -101,6 +108,20 @@ public class MusicPlaylistGUI extends JFrame
         // Choose file now
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select dataset (CSV");
+        fileChooser.addChoosableFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f)
+            {
+                return f.isFile() && f.getName().toLowerCase().endsWith("csv");
+            }
+            
+            @Override
+            public String getDescription()
+            {
+                return "CSV files";
+            }
+        });
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         int result = fileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION)
@@ -118,7 +139,6 @@ public class MusicPlaylistGUI extends JFrame
      */
     private void loadDataFromFile(File file)
     {
-        playlistModel.clear();
         List<Song> songs = DataImporter.loadSongsFromCSV(file);
 
         if (songs.isEmpty())
@@ -136,14 +156,74 @@ public class MusicPlaylistGUI extends JFrame
             JOptionPane.showMessageDialog(this, "Invalid data structure selected!");
             return;
         }
-
-        // Update GUI
-        for (Song song : songs)
-        {
-            playlistModel.addElement(song.toString());
-        }
+        
+        updateGUI(songs);
+        SongDispenser.getInstance().setSongContainer(new Playlist(songs));
 
         JOptionPane.showMessageDialog(this, "🎧 Dataset loaded from: " + file.getName());
+    }
+    
+    /**
+     * Opens a dialogue to choose a search method.
+     * Then renders the found songs using the given query.
+     * @param query - search query.
+     */
+    private void searchFromData(String query)
+    {
+        SearchMethod method = null;
+        String[] dataStructures = {"Linear Search", "Binary Search"};
+        String choice = (String) JOptionPane.showInputDialog(
+                this,
+                "Select a search method:",
+                "Choose Search Method",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                dataStructures,
+                dataStructures[0]);
+        
+        if (choice == null)
+        {
+            return; // No choice made, stop
+        }
+        
+        // Initialise chose search method
+        switch (choice)
+        {
+            case "Linear Search":
+                method = new LinearSearch();
+                break;
+            case "Binary Search":
+                method = new BinarySearch();
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "Invalid Choice!");
+                return;
+        }
+        
+        SearchResult results = SongDispenser.getInstance().search(query, method);
+        updateGUI(results.getSongs());
+    }
+    
+    /**
+     * Clears the current view, then renders the given songs.
+     * @param songs - Collection of songs to render.
+     */
+    private void updateGUI(Collection<Song> songs)
+    {
+        playlistModel.clear();
+        
+        if (songs.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "⚠ No songs to render!");
+            return;
+        }
+        
+        Iterator<Song> iterator = songs.iterator();
+        
+        while (iterator.hasNext())
+        {
+            playlistModel.addElement(iterator.next().toString());
+        }
     }
 
     public static void main(String[] args)

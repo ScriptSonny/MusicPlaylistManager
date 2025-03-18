@@ -2,11 +2,9 @@ package search;
 
 import song.SearchResult;
 import song.Song;
-import song.SongContainer;
+import utils.StringQueryComparator;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.HashSet;
 
 public class LinearSearch implements SearchMethod
 {
@@ -14,9 +12,13 @@ public class LinearSearch implements SearchMethod
     public SearchResult search(String query, Collection<Song> songs)
     {
         SearchResult validSongs = new SearchResult();
+        if (songs == null)
+        {
+            return validSongs;
+        }
         for (Song song : songs)
         {
-            if (song.getTitle().compareTo(query) > 0)
+            if (StringQueryComparator.compare(song.getTitle(), query) || StringQueryComparator.compare(song.getArtist().getName(), query))
             {
                 validSongs.appendSong(song);
             }
