@@ -9,7 +9,7 @@ import java.util.Collection;
 public class LinearSearch implements SearchMethod
 {
     @Override
-    public SearchResult search(String query, Collection<Song> songs)
+    public <T extends Collection<Song>> SearchResult search(String query, T songs)
     {
         SearchResult validSongs = new SearchResult();
         if (songs == null)
