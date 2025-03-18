@@ -212,7 +212,7 @@ public class MusicPlaylistGUI extends JFrame
                 JOptionPane.showMessageDialog(this, "Invalid Choice!");
                 return;
         }
-        
+
         SearchResult results = SongDispenser.getInstance().search(query, method);
         updateGUI(results.getSongs());
     }
@@ -252,11 +252,14 @@ public class MusicPlaylistGUI extends JFrame
                 return;
         }
 
-        SortResult sortedResult = SongDispenser.getInstance().sort(sortingMethod);
+        // Measure sorting execution time
+        SortResult[] sortedResult = new SortResult[1];
+        long timeTaken = measureExecutionTime(() -> sortedResult[0] = SongDispenser.getInstance().sort(sortingMethod));
 
-        if (!sortedResult.getSongs().isEmpty()) {
-            updateGUI(sortedResult.getSongs());
-            JOptionPane.showMessageDialog(this, "Playlist sorted using " + choice + "!");
+        if (!sortedResult[0].getSongs().isEmpty()) {
+            updateGUI(sortedResult[0].getSongs());
+            JOptionPane.showMessageDialog(this,
+                    "✅ Playlist sorted using " + choice + "!\n⏳ Sorting took: " + timeTaken + " ms");
         } else {
             JOptionPane.showMessageDialog(this, "⚠ Error while sorting: No songs found!");
         }
@@ -357,6 +360,17 @@ public class MusicPlaylistGUI extends JFrame
             }
         }
         return null;
+    }
+
+    /**
+     * measure execution time of algorithms
+     * @param action what to measure
+     * @return time in milliseconds
+     */
+    private long measureExecutionTime(Runnable action) {
+        long startTime = System.nanoTime();
+        action.run();
+        return (System.nanoTime() - startTime) / 1_000_000;
     }
 
     public static void main(String[] args)
