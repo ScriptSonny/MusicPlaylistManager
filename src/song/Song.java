@@ -43,38 +43,38 @@ public class Song implements Comparable<Song>
     public int getPopularity() {
         return popularity;
     }
-    
+
     public void setTitle(String title)
     {
         this.title = title;
     }
-    
+
     public void setArtist(Artist artist)
     {
         this.artist = artist;
     }
-    
+
     public void setGenre(Genre genre)
     {
         this.genre = genre;
     }
-    
+
     public void setDuration(int duration)
     {
         this.duration = duration;
     }
-    
+
     public void setPopularity(int popularity)
     {
         this.popularity = popularity;
     }
-    
+
     @Override
     public String toString()
     {
         return "🎵 " + getTitle() + " - " + getArtist().getName();
     }
-    
+
     @Override
     public int compareTo(Song o)
     {

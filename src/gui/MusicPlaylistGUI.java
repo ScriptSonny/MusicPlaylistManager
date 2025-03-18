@@ -5,10 +5,11 @@ import collection.doublylinkedlist.DoublyLinkedList;
 import search.BinarySearch;
 import search.LinearSearch;
 import search.SearchMethod;
-import song.Playlist;
-import song.SearchResult;
-import song.Song;
-import song.SongDispenser;
+import song.*;
+import sorting.BubbleSort;
+import sorting.MergeSort;
+import sorting.QuickSort;
+import sorting.SortingMethod;
 import utils.DataImporter;
 
 import javax.swing.*;
@@ -35,7 +36,6 @@ public class MusicPlaylistGUI extends JFrame
     private AtomicInteger index = new AtomicInteger(0); // Track song index
     private AtomicInteger remainingDuration = new AtomicInteger(0); // Track remaining duration
     private boolean playingSong = false;
-
 
     public MusicPlaylistGUI()
     {
@@ -77,6 +77,7 @@ public class MusicPlaylistGUI extends JFrame
         loadButton.addActionListener(e -> selectDataStructureAndLoadFile());
         searchButton.addActionListener(e -> searchFromData(searchField.getText()));
         playButton.addActionListener(e -> playSongs());
+        sortButton.addActionListener(e -> sortPlaylist());
     }
 
     /**
@@ -215,7 +216,52 @@ public class MusicPlaylistGUI extends JFrame
         SearchResult results = SongDispenser.getInstance().search(query, method);
         updateGUI(results.getSongs());
     }
-    
+
+    /**
+     * Method to sort all songs in a Playlist based on user choice.
+     */
+    private void sortPlaylist() {
+        String[] sortingMethods = {"QuickSort", "MergeSort", "BubbleSort"};
+        String choice = (String) JOptionPane.showInputDialog(
+                this,
+                "Select a sorting method:",
+                "Choose Sorting Method",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                sortingMethods,
+                sortingMethods[0]);
+
+        if (choice == null) {
+            return;
+        }
+
+        SortingMethod sortingMethod;
+
+        switch (choice) {
+            case "QuickSort":
+                sortingMethod = new QuickSort();
+                break;
+            case "MergeSort":
+                sortingMethod = new MergeSort();
+                break;
+            case "BubbleSort":
+                sortingMethod = new BubbleSort();
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "⚠ Invalid choice!");
+                return;
+        }
+
+        SortResult sortedResult = SongDispenser.getInstance().sort(sortingMethod);
+
+        if (!sortedResult.getSongs().isEmpty()) {
+            updateGUI(sortedResult.getSongs());
+            JOptionPane.showMessageDialog(this, "Playlist sorted using " + choice + "!");
+        } else {
+            JOptionPane.showMessageDialog(this, "⚠ Error while sorting: No songs found!");
+        }
+    }
+
     /**
      * Clears the current view, then renders the given songs.
      * @param songs - Collection of songs to render.
@@ -223,15 +269,15 @@ public class MusicPlaylistGUI extends JFrame
     private void updateGUI(Collection<Song> songs)
     {
         playlistModel.clear();
-        
+
         if (songs.isEmpty())
         {
             JOptionPane.showMessageDialog(this, "⚠ No songs to render!");
             return;
         }
-        
+
         Iterator<Song> iterator = songs.iterator();
-        
+
         while (iterator.hasNext())
         {
             playlistModel.addElement(iterator.next().toString());
