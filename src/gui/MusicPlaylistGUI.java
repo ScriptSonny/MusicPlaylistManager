@@ -12,14 +12,13 @@ import song.SongDispenser;
 import utils.DataImporter;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,14 +62,12 @@ public class MusicPlaylistGUI extends JFrame
 
         loadButton = new JButton("📂 Load Playlist");
         sortButton = new JButton("🔀 Sort");
-        shuffleButton = new JButton("🎲 Shuffle");
         playButton = new JButton("▶ Play");
         searchField = new JTextField(10);
         searchButton = new JButton("🔍 Search");
 
         controlPanel.add(loadButton);
         controlPanel.add(sortButton);
-        controlPanel.add(shuffleButton);
         controlPanel.add(playButton);
         controlPanel.add(searchField);
         controlPanel.add(searchButton);
