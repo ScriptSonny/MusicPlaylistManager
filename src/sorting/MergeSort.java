@@ -1,6 +1,7 @@
 package sorting;
 
 import song.Song;
+import song.SongComparators;
 import song.SortResult;
 import collection.doublylinkedlist.DoublyLinkedList;
 
@@ -64,7 +65,7 @@ public class MergeSort implements SortingMethod {
         int i = 0, j = 0;
 
         while (i < left.size() && j < right.size()) {
-            if (left.get(i).compareTo(right.get(j)) <= 0) {
+            if (SongComparators.BY_TITLE.compare(left.get(i), right.get(j)) <= 0) {
                 merged.add(left.get(i));
                 i++;
             } else {

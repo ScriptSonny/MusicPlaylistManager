@@ -1,6 +1,7 @@
 package sorting;
 
 import song.Song;
+import song.SongComparators;
 import song.SortResult;
 import collection.doublylinkedlist.DoublyLinkedList;
 
@@ -62,7 +63,8 @@ public class QuickSort implements SortingMethod {
         int i = low - 1;
 
         for (int j = low; j < high; j++) {
-            if (list.get(j).compareTo(pivot) <= 0) {
+            if (SongComparators.BY_TITLE.compare(list.get(j), pivot) <= 0)
+            {
                 i++;
                 swap(list, i, j);
             }
