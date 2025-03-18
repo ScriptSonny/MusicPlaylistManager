@@ -7,7 +7,10 @@ public class SongDispenser
     private static SongDispenser instance;
     private SongContainer songContainer;
     
-    private SongDispenser() {}
+    private SongDispenser()
+    {
+        this.songContainer = new Album();
+    }
     
     public static SongDispenser getInstance()
     {
