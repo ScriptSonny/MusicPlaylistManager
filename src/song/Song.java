@@ -1,9 +1,8 @@
 package song;
 
 import artist.Artist;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Song
+public class Song implements Comparable<Song>
 {
     private String title;
     private Artist artist;
@@ -16,12 +15,8 @@ public class Song
 
     }
 
-    public Song(
-            @JsonProperty("title") String title,
-            @JsonProperty("artist") Artist artist,
-            @JsonProperty("genre") Genre genre,
-            @JsonProperty("duration") int duration,
-            @JsonProperty("popularity") int popularity) {
+    public Song(String title, Artist artist, Genre genre, int duration, int popularity)
+    {
         this.title = title;
         this.artist = artist;
         this.genre = genre;
@@ -48,35 +43,40 @@ public class Song
     public int getPopularity() {
         return popularity;
     }
-    
+
     public void setTitle(String title)
     {
         this.title = title;
     }
-    
+
     public void setArtist(Artist artist)
     {
         this.artist = artist;
     }
-    
+
     public void setGenre(Genre genre)
     {
         this.genre = genre;
     }
-    
+
     public void setDuration(int duration)
     {
         this.duration = duration;
     }
-    
+
     public void setPopularity(int popularity)
     {
         this.popularity = popularity;
     }
-    
+
     @Override
     public String toString()
     {
         return "🎵 " + getTitle() + " - " + getArtist().getName();
+    }
+
+    @Override
+    public int compareTo(Song other) {
+        return this.title.compareTo(other.title);
     }
 }
