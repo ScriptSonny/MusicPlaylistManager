@@ -140,8 +140,6 @@ public class MusicPlaylistGUI extends JFrame
         if (result == JFileChooser.APPROVE_OPTION)
         {
             File selectedFile = fileChooser.getSelectedFile();
-            JOptionPane.showMessageDialog(this, "Selected file: " + selectedFile.getName());
-
             loadDataFromFile(selectedFile);
         }
     }
@@ -183,7 +181,13 @@ public class MusicPlaylistGUI extends JFrame
      */
     private void searchFromData(String query)
     {
-        SearchMethod method = null;
+        if (selectedDataStructure == null || selectedDataStructure.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No songs available for search!");
+            return;
+        }
+
+        SearchMethod method;
+        String timeComplexity = "";
         String[] dataStructures = {"Linear Search", "Binary Search"};
         String choice = (String) JOptionPane.showInputDialog(
                 this,
@@ -204,17 +208,30 @@ public class MusicPlaylistGUI extends JFrame
         {
             case "Linear Search":
                 method = new LinearSearch();
+                timeComplexity = "O(n) - Worst case";
                 break;
             case "Binary Search":
                 method = new BinarySearch();
+                timeComplexity = "O(log n)";
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "Invalid Choice!");
                 return;
         }
 
-        SearchResult results = SongDispenser.getInstance().search(query, method);
-        updateGUI(results.getSongs());
+        int totalSongs = selectedDataStructure.size();
+
+        // Measure execution time for search
+        SearchResult[] results = new SearchResult[1];
+        long timeTaken = measureExecutionTime(() -> results[0] = SongDispenser.getInstance().search(query, method));
+
+        int foundSongs = results[0].getSongs().size();
+        updateGUI(results[0].getSongs());
+
+        JOptionPane.showMessageDialog(this,
+                "🔍 Found " + foundSongs + " out of " + totalSongs + " songs.\n" +
+                        "⏳ Search took: " + timeTaken + " ms.\n" +
+                        "🕒 Time Complexity: " + timeComplexity + ".");
     }
 
     /**
