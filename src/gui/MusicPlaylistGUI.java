@@ -18,6 +18,8 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.*;
 import java.util.List;
@@ -78,6 +80,27 @@ public class MusicPlaylistGUI extends JFrame
         searchButton.addActionListener(e -> searchFromData(searchField.getText()));
         playButton.addActionListener(e -> playSongs());
         sortButton.addActionListener(e -> sortPlaylist());
+
+        playlistDisplay.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getClickCount() == 2) // double click
+                {
+                    int index = playlistDisplay.locationToIndex(e.getPoint());
+                    if (index != -1)
+                    {
+                        String selectedSongText = playlistModel.get(index);
+                        Song selectedSong = findSongByText(selectedSongText);
+                        if (selectedSong != null)
+                        {
+                            playSpecificSong(selectedSong, index);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -388,6 +411,61 @@ public class MusicPlaylistGUI extends JFrame
             }
         }
         return null;
+    }
+
+    /**
+     * Play a specific song at the given index.
+     * @param song song to play
+     * @param songIndex index of the song
+     */
+    private void playSpecificSong(Song song, int songIndex)
+    {
+        if (song == null)
+        {
+            JOptionPane.showMessageDialog(this, "Could not find selected song!");
+            return;
+        }
+
+        // Stop current playing song (if necessary)
+        if (playTimer != null && playTimer.isRunning())
+        {
+            playTimer.stop();
+        }
+
+        index.set(songIndex);
+        remainingDuration.set(song.getDuration());
+        playingSong = true;
+        isPaused = false;
+        playButton.setText("⏸ Pause");
+
+        nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
+        nowPlayingLabel.setText("Now Playing: 🎵 " + song.getTitle() + " (" + remainingDuration.get() + "s left)");
+
+        playTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                remainingDuration.getAndDecrement();
+                if (remainingDuration.get() <= 0) {
+                    playTimer.stop();
+                    playingSong = false;
+                    index.incrementAndGet();
+                    if (index.get() < playlistModel.size()) {
+                        String nextSongText = playlistModel.get(index.get());
+                        Song nextSong = findSongByText(nextSongText);
+                        if (nextSong != null) {
+                            playSpecificSong(nextSong, index.get());
+                        }
+                    } else {
+                        nowPlayingLabel.setText("Playlist finished!");
+                    }
+                } else {
+                    nowPlayingLabel.setText("Now Playing: 🎵 " + song.getTitle() + " (" + remainingDuration.get() + "s left)");
+                }
+            }
+        });
+
+        playTimer.setInitialDelay(0);
+        playTimer.start();
     }
 
     /**
