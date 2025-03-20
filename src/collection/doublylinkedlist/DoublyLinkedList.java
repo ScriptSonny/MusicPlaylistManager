@@ -75,16 +75,32 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T>
     @Override
     public Object[] toArray()
     {
-        // TODO
-        return new Object[0];
+        Object[] array = new Object[this.size()];
+        DoublyLinkedListIterator<T> iterator = this.iterator();
+        int index = 0;
+        while (iterator.hasNext())
+        {
+            array[index++] = iterator.next();
+        }
+        return array;
     }
     
     @Override
     public <T1> T1[] toArray(T1[] a)
     {
-        // TODO
-        return null;
+        if (a.length < this.size())
+        {
+            a = (T1[]) java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), this.size());
+        }
+        int index = 0;
+        DoublyLinkedListIterator<T> iterator = this.iterator();
+        while (iterator.hasNext())
+        {
+            a[index++] = (T1) iterator.next();
+        }
+        return a;
     }
+    
     
     @Override
     public boolean add(T t)
@@ -196,9 +212,19 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T>
     @Override
     public boolean retainAll(Collection<?> c)
     {
-        // TODO
-        return false;
+        boolean modified = false;
+        DoublyLinkedListIterator<T> iterator = this.iterator();
+        while (iterator.hasNext())
+        {
+            if (!c.contains(iterator.next()))
+            {
+                iterator.remove();
+                modified = true;
+            }
+        }
+        return modified;
     }
+    
     
     @Override
     public void clear()

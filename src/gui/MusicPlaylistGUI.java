@@ -3,6 +3,7 @@ package gui;
 import collection.binarysearchtree.BinarySearchTree;
 import collection.doublylinkedlist.DoublyLinkedList;
 import search.BinarySearch;
+import search.HashMapSearch;
 import search.LinearSearch;
 import search.SearchMethod;
 import song.*;
@@ -211,7 +212,7 @@ public class MusicPlaylistGUI extends JFrame
 
         SearchMethod method;
         String timeComplexity = "";
-        String[] dataStructures = {"Linear Search", "Binary Search"};
+        String[] dataStructures = {"Linear Search", "Binary Search", "HashMap Search"};
         String choice = (String) JOptionPane.showInputDialog(
                 this,
                 "Select a search method:",
@@ -236,6 +237,9 @@ public class MusicPlaylistGUI extends JFrame
             case "Binary Search":
                 method = new BinarySearch();
                 timeComplexity = "O(log n)";
+                break;
+            case "HashMap Search":
+                method = new HashMapSearch();
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "Invalid Choice!");

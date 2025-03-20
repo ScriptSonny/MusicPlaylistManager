@@ -25,6 +25,10 @@ public abstract class SongContainer
     
     public void appendSong(Song newSong)
     {
+        if (newSong == null)
+        {
+            return;
+        }
         this.songs.add(newSong);
     }
     

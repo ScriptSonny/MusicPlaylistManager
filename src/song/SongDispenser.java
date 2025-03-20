@@ -37,9 +37,12 @@ public class SongDispenser
     // Methods
     public SearchResult search(String query, SearchMethod method)
     {
-        if (method instanceof BinarySearch) {
+        if (method instanceof BinarySearch)
+        {
             return method.search(query, songContainer.getSongs().toBST());
-        } else {
+        }
+        else
+        {
             return method.search(query, songContainer.getSongs());
         }
     }
