@@ -18,6 +18,15 @@ public class BinarySearch implements SearchMethod
         {
             throw new IllegalArgumentException("Song parameter has to be BinarySearchTree");
         }
+        if (songs == null)
+        {
+            return validSongs;
+        }
+        if (query.length() == 0)
+        {
+            validSongs.appendSongs(songs);
+            return validSongs;
+        }
         BinarySearchTree<Song> bst = (BinarySearchTree<Song>) songs;
         Song searchSong = new Song();
         searchSong.setTitle(query);

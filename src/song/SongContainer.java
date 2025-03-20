@@ -2,6 +2,8 @@ package song;
 
 import collection.doublylinkedlist.DoublyLinkedList;
 
+import java.util.Collection;
+
 public abstract class SongContainer
 {
     private DoublyLinkedList<Song> songs;
@@ -24,6 +26,11 @@ public abstract class SongContainer
     public void appendSong(Song newSong)
     {
         this.songs.add(newSong);
+    }
+    
+    public void appendSongs(Collection<Song> songs)
+    {
+        this.songs.addAll(songs);
     }
     
     @Override

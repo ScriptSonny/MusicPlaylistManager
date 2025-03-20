@@ -1,5 +1,6 @@
 package collection.doublylinkedlist;
 
+import collection.binarysearchtree.BinarySearchTree;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +20,18 @@ public class DoublyLinkedListTest
     @Test
     public void toBST()
     {
+        for (int i = 0; i < 100; i++)
+        {
+            this.list.add(i);
+        }
+        BinarySearchTree<Integer> tree = this.list.toBST();
+        assertFalse(tree.isEmpty());
+        assertEquals(this.list.size(), tree.size());
+        DoublyLinkedListIterator<Integer> iterator = this.list.iterator();
+        while (iterator.hasNext())
+        {
+            assertTrue(tree.contains(iterator.next()));
+        }
     }
     
     @Test

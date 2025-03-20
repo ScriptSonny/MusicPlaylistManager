@@ -16,6 +16,11 @@ public class LinearSearch implements SearchMethod
         {
             return validSongs;
         }
+        if (query.length() == 0)
+        {
+            validSongs.appendSongs(songs);
+            return validSongs;
+        }
         for (Song song : songs)
         {
             if (StringQueryComparator.compare(song.getTitle(), query) || StringQueryComparator.compare(song.getArtist().getName(), query))

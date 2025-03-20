@@ -118,7 +118,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements Collection<T>
     @Override
     public boolean isEmpty()
     {
-        return this.size() > 0;
+        return this.size() == 0;
     }
     
     @Override
