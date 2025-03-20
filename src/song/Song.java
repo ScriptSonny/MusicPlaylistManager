@@ -76,8 +76,11 @@ public class Song implements Comparable<Song>
     }
 
     @Override
-    public int compareTo(Song o)
-    {
-        return o.getPopularity() - this.popularity;
+    public int compareTo(Song other) {
+        int titleComparison = this.title.compareToIgnoreCase(other.title);
+        if (titleComparison != 0) {
+            return titleComparison;
+        }
+        return this.artist.getName().compareToIgnoreCase(other.artist.getName());
     }
 }
