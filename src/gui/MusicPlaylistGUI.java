@@ -212,7 +212,7 @@ public class MusicPlaylistGUI extends JFrame
                 JOptionPane.showMessageDialog(this, "Invalid Choice!");
                 return;
         }
-        
+
         SearchResult results = SongDispenser.getInstance().search(query, method);
         updateGUI(results.getSongs());
     }
@@ -236,27 +236,36 @@ public class MusicPlaylistGUI extends JFrame
         }
 
         SortingMethod sortingMethod;
+        String timeComplexity;
 
         switch (choice) {
             case "QuickSort":
                 sortingMethod = new QuickSort();
+                timeComplexity = "Average: O(n log n), Worst: O(n²)";
                 break;
             case "MergeSort":
                 sortingMethod = new MergeSort();
+                timeComplexity = "O(n log n)";
                 break;
             case "BubbleSort":
                 sortingMethod = new BubbleSort();
+                timeComplexity = "O(n²) (Worst case)";
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "⚠ Invalid choice!");
                 return;
         }
 
-        SortResult sortedResult = SongDispenser.getInstance().sort(sortingMethod);
+        // Measure sorting execution time
+        SortResult[] sortedResult = new SortResult[1];
+        long timeTaken = measureExecutionTime(() -> sortedResult[0] = SongDispenser.getInstance().sort(sortingMethod));
 
-        if (!sortedResult.getSongs().isEmpty()) {
-            updateGUI(sortedResult.getSongs());
-            JOptionPane.showMessageDialog(this, "Playlist sorted using " + choice + "!");
+        if (!sortedResult[0].getSongs().isEmpty()) {
+            updateGUI(sortedResult[0].getSongs());
+            JOptionPane.showMessageDialog(this,
+                    "✅ Playlist sorted using " + choice + "!\n" +
+                            "⏳ Sorting took: " + timeTaken + " ms\n" +
+                            "🕒 Time Complexity: " + timeComplexity);
         } else {
             JOptionPane.showMessageDialog(this, "⚠ Error while sorting: No songs found!");
         }
@@ -297,11 +306,14 @@ public class MusicPlaylistGUI extends JFrame
         if (playTimer != null && playTimer.isRunning()) {
             playTimer.stop();
             isPaused = true;
+            playButton.setText("⏸ Paused");
+            nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
             nowPlayingLabel.setText("Paused: " + playlistModel.get(index.get()) + " (" + remainingDuration.get() + "s left)");
             return;
         }
 
         isPaused = false;
+        playButton.setText("▶ Play");
 
         playTimer = new Timer(1000, new ActionListener() {
             @Override
@@ -319,6 +331,7 @@ public class MusicPlaylistGUI extends JFrame
 
                     if (currentSong != null) {
                         remainingDuration.set(remainingDuration.get() == 0 ? currentSong.getDuration() : remainingDuration.get());
+                        nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
                         nowPlayingLabel.setText("Now Playing: " + currentSong.getTitle() + " (" + remainingDuration.get() + "s left)");
                         playingSong = true;
                     }
@@ -330,6 +343,7 @@ public class MusicPlaylistGUI extends JFrame
                         remainingDuration.set(0);
                         index.incrementAndGet(); // Move to next song
                     } else {
+                        nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
                         nowPlayingLabel.setText("Now Playing: " + playlistModel.get(index.get()) + " (" + remainingDuration.get() + "s left)");
                     }
                 }
@@ -357,6 +371,17 @@ public class MusicPlaylistGUI extends JFrame
             }
         }
         return null;
+    }
+
+    /**
+     * measure execution time of algorithms
+     * @param action what to measure
+     * @return time in milliseconds
+     */
+    private long measureExecutionTime(Runnable action) {
+        long startTime = System.nanoTime();
+        action.run();
+        return (System.nanoTime() - startTime) / 1_000_000;
     }
 
     public static void main(String[] args)
