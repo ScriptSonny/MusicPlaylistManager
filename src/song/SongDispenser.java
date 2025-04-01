@@ -2,6 +2,7 @@ package song;
 
 import search.BinarySearch;
 import search.SearchMethod;
+import song.querycomparator.QueryComparator;
 import sorting.SortingMethod;
 
 import java.util.Comparator;
@@ -37,15 +38,15 @@ public class SongDispenser
     }
 
     // Methods
-    public SearchResult search(String query, SearchMethod method)
+    public SearchResult search(String query, SearchMethod method, QueryComparator comparator)
     {
         if (method instanceof BinarySearch)
         {
-            return method.search(query, songContainer.getSongs().toBST());
+            return method.search(query, songContainer.getSongs().toBST(), comparator);
         }
         else
         {
-            return method.search(query, songContainer.getSongs());
+            return method.search(query, songContainer.getSongs(), comparator);
         }
     }
 

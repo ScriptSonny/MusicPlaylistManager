@@ -2,14 +2,14 @@ package search;
 
 import collection.hashmap.HashMap;
 import song.SearchResult;
-import song.Song;
+import song.querycomparator.QueryComparator;
 
 import java.util.Collection;
 
-public class HashMapSearch implements SearchMethod
+public class HashMapSearch <T extends Comparable<T>> implements SearchMethod <T>
 {
     @Override
-    public <T extends Collection<Song>> SearchResult search(String query, T songs)
+    public SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator)
     {
         SearchResult validSongs = new SearchResult();
         if (songs == null)
@@ -21,14 +21,14 @@ public class HashMapSearch implements SearchMethod
             validSongs.appendSongs(songs);
             return validSongs;
         }
-        Song[] values = songs.toArray(new Song[0]);
+        T[] values = (T[]) songs.toArray(new Object[0]);
         String[] keys = new String[values.length];
         for (int i = 0; i < values.length; i++)
         {
-            keys[i] = values[i].getTitle();
+            keys[i] = comparator.getComparable(values[i]);;
         }
-        HashMap<String, Song> map = new HashMap<>(keys, values);
-        validSongs.appendSong((Song) (map.get(query)));
+        HashMap<String, T> map = new HashMap<>(keys, values);
+        validSongs.appendSong(map.get(query));
         return validSongs;
     }
 }

@@ -9,6 +9,7 @@ import search.HashMapSearch;
 import search.LinearSearch;
 import search.SearchMethod;
 import song.*;
+import song.querycomparator.TitleQueryComparator;
 import sorting.BubbleSort;
 import sorting.MergeSort;
 import sorting.QuickSort;
@@ -252,7 +253,7 @@ public class MusicPlaylistGUI extends JFrame
 
         // Measure execution time for search
         SearchResult[] results = new SearchResult[1];
-        long timeTaken = measureExecutionTime(() -> results[0] = SongDispenser.getInstance().search(query, method));
+        long timeTaken = measureExecutionTime(() -> results[0] = SongDispenser.getInstance().search(query, method, new TitleQueryComparator()));
 
         int foundSongs = results[0].getSongs().size();
         updateGUI(results[0].getSongs());
