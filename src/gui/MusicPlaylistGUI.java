@@ -25,10 +25,11 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MusicPlaylistGUI extends JFrame
 {
-    private JButton loadButton, sortButton, shuffleButton, playButton, searchButton;
+    private JButton loadButton, sortButton, playButton, searchButton;
     private JTextField searchField;
     private JList<String> playlistDisplay;
     private DefaultListModel<String> playlistModel;
@@ -279,20 +280,20 @@ public class MusicPlaylistGUI extends JFrame
             return;
         }
 
-        SortingMethod sortingMethod;
+        SortingMethod<Song> sortingMethod;
         String timeComplexity;
 
         switch (choice) {
             case "QuickSort":
-                sortingMethod = new QuickSort();
+                sortingMethod = new QuickSort<Song>();
                 timeComplexity = "Average: O(n log n), Worst: O(n²)";
                 break;
             case "MergeSort":
-                sortingMethod = new MergeSort();
+                sortingMethod = new MergeSort<Song>();
                 timeComplexity = "O(n log n)";
                 break;
             case "BubbleSort":
-                sortingMethod = new BubbleSort();
+                sortingMethod = new BubbleSort<Song>();
                 timeComplexity = "O(n²) (Worst case)";
                 break;
             default:
@@ -301,11 +302,11 @@ public class MusicPlaylistGUI extends JFrame
         }
 
         // Measure sorting execution time
-        SortResult[] sortedResult = new SortResult[1];
-        long timeTaken = measureExecutionTime(() -> sortedResult[0] = SongDispenser.getInstance().sort(sortingMethod));
+        AtomicReference<SortResult<Song>> sortedResult = new AtomicReference<>();
+        long timeTaken = measureExecutionTime(() -> sortedResult.set(SongDispenser.getInstance().sort(sortingMethod)));
 
-        if (!sortedResult[0].getSongs().isEmpty()) {
-            updateGUI(sortedResult[0].getSongs());
+        if (!sortedResult.get().getSongs().isEmpty()) {
+            updateGUI(sortedResult.get().getSongs());
             JOptionPane.showMessageDialog(this,
                     "✅ Playlist sorted using " + choice + "!\n" +
                             "⏳ Sorting took: " + timeTaken + " ms\n" +
