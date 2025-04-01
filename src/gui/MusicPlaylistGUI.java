@@ -9,6 +9,9 @@ import search.HashMapSearch;
 import search.LinearSearch;
 import search.SearchMethod;
 import song.*;
+import song.querycomparator.ArtistQueryComparator;
+import song.querycomparator.GenreQueryComparator;
+import song.querycomparator.QueryComparator;
 import song.querycomparator.TitleQueryComparator;
 import sorting.BubbleSort;
 import sorting.MergeSort;
@@ -198,60 +201,82 @@ public class MusicPlaylistGUI extends JFrame
      */
     private void searchFromData(String query)
     {
-        SongContainer container = SongDispenser.getInstance().getSongContainer();
+        SongContainer<Song> container = SongDispenser.getInstance().getSongContainer();
         if (container == null || container.getSongs().isEmpty())
         {
-            JOptionPane.showMessageDialog(this, "No songs avaiable for search!");
+            JOptionPane.showMessageDialog(this, "No songs available for search!");
             return;
         }
 
-        SearchMethod method;
+        if (query == null || query.trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Please enter a search query.");
+            return;
+        }
+
+        SearchMethod<Song> method;
         String timeComplexity = "";
-        String[] dataStructures = {"Linear Search", "Binary Search", "HashMap Search"};
-        String choice = (String) JOptionPane.showInputDialog(
+        String[] methodOptions = {"Linear Search", "Binary Search", "HashMap Search"};
+        String methodChoice = (String) JOptionPane.showInputDialog(
                 this,
                 "Select a search method:",
                 "Choose Search Method",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                dataStructures,
-                dataStructures[0]);
-        
-        if (choice == null)
+                methodOptions,
+                methodOptions[0]);
+
+        if (methodChoice == null) return;
+
+        switch (methodChoice)
         {
-            return; // No choice made, stop
-        }
-        
-        // Initialise chose search method
-        switch (choice)
-        {
-            case "Linear Search":
-                method = new LinearSearch();
+            case "Linear Search" -> {
+                method = new LinearSearch<>();
                 timeComplexity = "O(n) - Worst case";
-                break;
-            case "Binary Search":
-                method = new BinarySearch();
+            }
+            case "Binary Search" -> {
+                method = new BinarySearch<>();
                 timeComplexity = "O(log n)";
-                break;
-            case "HashMap Search":
-                method = new HashMapSearch();
-                break;
-            default:
-                JOptionPane.showMessageDialog(this, "Invalid Choice!");
+            }
+            case "HashMap Search" -> {
+                method = new HashMapSearch<>();
+                timeComplexity = "O(1) average, O(n) worst";
+            }
+            default -> {
+                JOptionPane.showMessageDialog(this, "Invalid search method!");
                 return;
+            }
         }
 
-        int totalSongs = SongDispenser.getInstance().getSongContainer().getSongs().size();
+        String[] fieldOptions = {"Title", "Artist", "Genre"};
+        String fieldChoice = (String) JOptionPane.showInputDialog(
+                this,
+                "Select a field to search in:",
+                "Choose Field",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                fieldOptions,
+                fieldOptions[0]);
 
-        // Measure execution time for search
+        if (fieldChoice == null) return;
+
+        QueryComparator<Song> queryComparator;
+        switch (fieldChoice) {
+            case "Artist" -> queryComparator = new ArtistQueryComparator();
+            case "Genre" -> queryComparator = new GenreQueryComparator();
+            default -> queryComparator = new TitleQueryComparator();
+        }
+
         SearchResult[] results = new SearchResult[1];
-        long timeTaken = measureExecutionTime(() -> results[0] = SongDispenser.getInstance().search(query, method, new TitleQueryComparator()));
+        long timeTaken = measureExecutionTime(() -> {
+            results[0] = SongDispenser.getInstance().search(query, method, queryComparator);
+        });
 
         int foundSongs = results[0].getSongs().size();
         updateGUI(results[0].getSongs());
 
         JOptionPane.showMessageDialog(this,
-                "🔍 Found " + foundSongs + " out of " + totalSongs + " songs.\n" +
+                "🔍 Found " + foundSongs + " out of " + container.getSongs().size() + " songs.\n" +
                         "⏳ Search took: " + timeTaken + " ms.\n" +
                         "🕒 Time Complexity: " + timeComplexity + ".");
     }
@@ -422,7 +447,7 @@ public class MusicPlaylistGUI extends JFrame
      */
     private Song findSongByText(String songText)
     {
-        SongContainer container = SongDispenser.getInstance().getSongContainer();
+        SongContainer<Song> container = SongDispenser.getInstance().getSongContainer();
         if (container == null || container.getSongs().isEmpty()) return null;
 
         for (Song song : container.getSongs())

@@ -10,14 +10,13 @@ import java.util.Collection;
 public class HashMapSearch <T extends Comparable<T>> implements SearchMethod <T>
 {
     @Override
-    public SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator) {
-        SearchResult validSongs = new SearchResult(new DoublyLinkedList<>());
+    public SearchResult<T> search(String query, Collection<T> songs, QueryComparator<T> comparator) {
+        SearchResult<T> validSongs = new SearchResult<T>(new DoublyLinkedList<>());
 
         if (songs == null || query == null) {
             return validSongs;
         }
 
-        HashMap<String, T> map = new HashMap<>();
         for (T song : songs) {
             String key = comparator.getComparable(song);
             if (key != null && key.contains(query)) {
