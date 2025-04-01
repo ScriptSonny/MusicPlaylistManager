@@ -4,6 +4,8 @@ import search.BinarySearch;
 import search.SearchMethod;
 import sorting.SortingMethod;
 
+import java.util.Comparator;
+
 public class SongDispenser
 {
     private static SongDispenser instance;
@@ -47,8 +49,8 @@ public class SongDispenser
         }
     }
 
-    public SortResult sort(SortingMethod method)
+    public SortResult<Song> sort(SortingMethod<Song> method, Comparator<Song> comparator)
     {
-        return method.sort(songContainer.getSongs());
+        return method.sort(songContainer.getSongs(), comparator);
     }
 }

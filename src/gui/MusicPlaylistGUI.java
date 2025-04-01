@@ -27,10 +27,11 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MusicPlaylistGUI extends JFrame
 {
-    private JButton loadButton, sortButton, shuffleButton, playButton, searchButton;
+    private JButton loadButton, sortButton, playButton, searchButton;
     private JTextField searchField;
     private JList<String> playlistDisplay;
     private DefaultListModel<String> playlistModel;
@@ -267,7 +268,7 @@ public class MusicPlaylistGUI extends JFrame
      */
     private void sortPlaylist() {
         String[] sortingMethods = {"QuickSort", "MergeSort", "BubbleSort"};
-        String choice = (String) JOptionPane.showInputDialog(
+        String methodChoice = (String) JOptionPane.showInputDialog(
                 this,
                 "Select a sorting method:",
                 "Choose Sorting Method",
@@ -276,24 +277,24 @@ public class MusicPlaylistGUI extends JFrame
                 sortingMethods,
                 sortingMethods[0]);
 
-        if (choice == null) {
+        if (methodChoice == null) {
             return;
         }
 
-        SortingMethod sortingMethod;
+        SortingMethod<Song> sortingMethod;
         String timeComplexity;
 
-        switch (choice) {
+        switch (methodChoice) {
             case "QuickSort":
-                sortingMethod = new QuickSort();
+                sortingMethod = new QuickSort<>();
                 timeComplexity = "Average: O(n log n), Worst: O(n²)";
                 break;
             case "MergeSort":
-                sortingMethod = new MergeSort();
+                sortingMethod = new MergeSort<>();
                 timeComplexity = "O(n log n)";
                 break;
             case "BubbleSort":
-                sortingMethod = new BubbleSort();
+                sortingMethod = new BubbleSort<>();
                 timeComplexity = "O(n²) (Worst case)";
                 break;
             default:
@@ -301,14 +302,37 @@ public class MusicPlaylistGUI extends JFrame
                 return;
         }
 
-        // Measure sorting execution time
-        SortResult[] sortedResult = new SortResult[1];
-        long timeTaken = measureExecutionTime(() -> sortedResult[0] = SongDispenser.getInstance().sort(sortingMethod));
+        String[] comparatorOptions = {"Title", "Artist", "Year", "Popularity"};
+        String comparatorChoice = (String) JOptionPane.showInputDialog(
+                this,
+                "Select a sort criterion:",
+                "Choose Comparator",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                comparatorOptions,
+                comparatorOptions[0]);
 
-        if (!sortedResult[0].getSongs().isEmpty()) {
-            updateGUI(sortedResult[0].getSongs());
+        if (comparatorChoice == null) {
+            return;
+        }
+
+        Comparator<Song> comparator = switch (comparatorChoice) {
+            case "Artist" -> SongComparators.BY_ARTIST;
+            case "Year" -> SongComparators.BY_DURATION;
+            case "Popularity" -> SongComparators.BY_POPULARITY;
+            default -> SongComparators.BY_TITLE;
+        };
+
+        // Measure sorting execution time
+        AtomicReference<SortResult<Song>> sortedResult = new AtomicReference<>();
+        long timeTaken = measureExecutionTime(() -> {
+            sortedResult.set(SongDispenser.getInstance().sort(sortingMethod, comparator));
+        });
+
+        if (!sortedResult.get().getSongs().isEmpty()) {
+            updateGUI(sortedResult.get().getSongs());
             JOptionPane.showMessageDialog(this,
-                    "✅ Playlist sorted using " + choice + "!\n" +
+                    "✅ Playlist sorted using " + methodChoice + " by " + comparatorChoice + "!\n" +
                             "⏳ Sorting took: " + timeTaken + " ms\n" +
                             "🕒 Time Complexity: " + timeComplexity);
         } else {
@@ -330,11 +354,8 @@ public class MusicPlaylistGUI extends JFrame
             return;
         }
 
-        Iterator<Song> iterator = songs.iterator();
-
-        while (iterator.hasNext())
-        {
-            playlistModel.addElement(iterator.next().toString());
+        for (Song song : songs) {
+            playlistModel.addElement(song.toString());
         }
     }
 
