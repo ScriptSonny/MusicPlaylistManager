@@ -34,7 +34,6 @@ public class MusicPlaylistGUI extends JFrame
     private JTextField searchField;
     private JList<String> playlistDisplay;
     private DefaultListModel<String> playlistModel;
-    private Collection<Song> selectedDataStructure;
     private JLabel nowPlayingLabel;
     private Timer playTimer;
     private AtomicInteger index = new AtomicInteger(0); // Track song index
@@ -126,22 +125,19 @@ public class MusicPlaylistGUI extends JFrame
             return; // No choice made, stop
         }
 
-        // Initialise chose datastructure
-        switch (choice)
-        {
-            case DOUBLY_LINKED_LIST:
-                selectedDataStructure = new DoublyLinkedList<>();
-                break;
-            case BINARY_SEARCH_TREE:
-                selectedDataStructure = new BinarySearchTree<>();
-                break;
-            case HASH_SET:
-                selectedDataStructure = new HashSet<>();
-                break;
-            default:
-                JOptionPane.showMessageDialog(this, "Invalid Choice!");
-                return;
+        SongContainer container = switch (choice) {
+            case DOUBLY_LINKED_LIST -> new Playlist(new DoublyLinkedList<>());
+            case BINARY_SEARCH_TREE -> new Playlist(new BinarySearchTree<>());
+            case HASH_SET -> new Playlist(new HashSet<>());
+            default -> null;
+        };
+
+        if (container == null) {
+            JOptionPane.showMessageDialog(this, "Invalid Choice!");
+            return;
         }
+
+        SongDispenser.getInstance().setSongContainer(container);
 
         // Choose file now
         JFileChooser fileChooser = new JFileChooser();
@@ -170,7 +166,8 @@ public class MusicPlaylistGUI extends JFrame
     }
 
     /**
-     * Loads the songs from the dataset and puts them in songs list.
+     * Loads the songs from the dataset and puts them in the SongDispenser.
+     * Also updates the GUI to reflect the laoded songs.
      * @param file - the selected dataset file.
      */
     private void loadDataFromFile(File file)
@@ -183,16 +180,9 @@ public class MusicPlaylistGUI extends JFrame
             return;
         }
 
-        if (selectedDataStructure != null)
-        {
-            selectedDataStructure.addAll(songs);
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this, "Invalid data structure selected!");
-            return;
-        }
-        
+        // Set the loaded songs into SongDispenser via a new Playlist
+        SongContainer container = new Playlist(songs);
+        SongDispenser.getInstance().setSongContainer(container);
         updateGUI(songs);
         SongDispenser.getInstance().setSongContainer(new Playlist(songs));
 
@@ -206,8 +196,10 @@ public class MusicPlaylistGUI extends JFrame
      */
     private void searchFromData(String query)
     {
-        if (selectedDataStructure == null || selectedDataStructure.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No songs available for search!");
+        SongContainer container = SongDispenser.getInstance().getSongContainer();
+        if (container == null || container.getSongs().isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "No songs avaiable for search!");
             return;
         }
 
@@ -247,7 +239,7 @@ public class MusicPlaylistGUI extends JFrame
                 return;
         }
 
-        int totalSongs = selectedDataStructure.size();
+        int totalSongs = SongDispenser.getInstance().getSongContainer().getSongs().size();
 
         // Measure execution time for search
         SearchResult[] results = new SearchResult[1];
@@ -408,9 +400,10 @@ public class MusicPlaylistGUI extends JFrame
      */
     private Song findSongByText(String songText)
     {
-        if (selectedDataStructure == null) return null;
+        SongContainer container = SongDispenser.getInstance().getSongContainer();
+        if (container == null || container.getSongs().isEmpty()) return null;
 
-        for (Song song : selectedDataStructure)
+        for (Song song : container.getSongs())
         {
             if (song.toString().equals(songText))
             {
