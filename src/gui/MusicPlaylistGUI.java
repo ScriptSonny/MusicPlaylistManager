@@ -22,8 +22,6 @@ import utils.DataImporter;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -35,17 +33,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MusicPlaylistGUI extends JFrame {
-    private final JButton loadButton;
-    private final JButton sortButton;
     private final JButton playButton;
-    private final JButton searchButton;
     private final JTextField searchField;
     private final JList<String> playlistDisplay;
     private final DefaultListModel<String> playlistModel;
     private final JLabel nowPlayingLabel;
-    private Timer playTimer;
     private final AtomicInteger index = new AtomicInteger(0); // Track song index
     private final AtomicInteger remainingDuration = new AtomicInteger(0); // Track remaining duration
+    private Timer playTimer;
     private PlayerState playerState = PlayerState.STOPPED;
 
     public MusicPlaylistGUI() {
@@ -70,11 +65,11 @@ public class MusicPlaylistGUI extends JFrame {
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new GridLayout(2, 3, 10, 10));
 
-        loadButton = new JButton("📂 Load Playlist");
-        sortButton = new JButton("🔀 Sort");
+        JButton loadButton = new JButton("📂 Load Playlist");
+        JButton sortButton = new JButton("🔀 Sort");
         playButton = new JButton("▶ Play");
         searchField = new JTextField(10);
-        searchButton = new JButton("🔍 Search");
+        JButton searchButton = new JButton("🔍 Search");
 
         controlPanel.add(loadButton);
         controlPanel.add(sortButton);
@@ -84,10 +79,10 @@ public class MusicPlaylistGUI extends JFrame {
 
         add(controlPanel, BorderLayout.SOUTH);
 
-        loadButton.addActionListener(e -> selectDataStructureAndLoadFile());
-        searchButton.addActionListener(e -> searchFromData(searchField.getText()));
-        playButton.addActionListener(e -> playSongs());
-        sortButton.addActionListener(e -> sortPlaylist());
+        loadButton.addActionListener(_ -> selectDataStructureAndLoadFile());
+        searchButton.addActionListener(_ -> searchFromData(searchField.getText()));
+        playButton.addActionListener(_ -> playSongs());
+        sortButton.addActionListener(_ -> sortPlaylist());
 
         playlistDisplay.addMouseListener(new MouseAdapter() {
             @Override
@@ -115,14 +110,14 @@ public class MusicPlaylistGUI extends JFrame {
     }
 
     /**
-     * First opens a dropdown to select a datastructure.
-     * Then opens filechooser to select a dataset
+     * First opens a dropdown to select a data structure.
+     * Then opens file chooser to select a dataset
      */
     private void selectDataStructureAndLoadFile() {
         DataStructureType choice = (DataStructureType) JOptionPane.showInputDialog(
                 this,
-                "Select a datastructure",
-                "Choose Datastructure",
+                "Select a data structure",
+                "Choose data structure",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 DataStructureType.values(),
@@ -134,16 +129,10 @@ public class MusicPlaylistGUI extends JFrame {
         }
 
         SongContainer<Song> container = switch (choice) {
-            case DOUBLY_LINKED_LIST -> new Playlist(new DoublyLinkedList<>());
-            case BINARY_SEARCH_TREE -> new Playlist(new BinarySearchTree<>());
-            case HASH_SET -> new Playlist(new HashSet<>());
-            default -> null;
+            case DOUBLY_LINKED_LIST -> new Playlist<Song>(new DoublyLinkedList<>());
+            case BINARY_SEARCH_TREE -> new Playlist<Song>(new BinarySearchTree<>());
+            case HASH_SET -> new Playlist<>(new HashSet<Song>());
         };
-
-        if (container == null) {
-            JOptionPane.showMessageDialog(this, "Invalid Choice!");
-            return;
-        }
 
         SongDispenser.getInstance().setSongContainer(container);
 
@@ -172,7 +161,7 @@ public class MusicPlaylistGUI extends JFrame {
 
     /**
      * Loads the songs from the dataset and puts them in the SongDispenser.
-     * Also updates the GUI to reflect the laoded songs.
+     * Also updates the GUI to reflect the loaded songs.
      *
      * @param file - the selected dataset file.
      */
@@ -185,10 +174,10 @@ public class MusicPlaylistGUI extends JFrame {
         }
 
         // Set the loaded songs into SongDispenser via a new Playlist
-        Playlist container = new Playlist(songs);
+        Playlist<Song> container = new Playlist<>(songs);
         SongDispenser.getInstance().setSongContainer(container);
         updateGUI(songs);
-        SongDispenser.getInstance().setSongContainer(new Playlist(songs));
+        SongDispenser.getInstance().setSongContainer(new Playlist<>(songs));
 
         JOptionPane.showMessageDialog(this, "🎧 Dataset loaded from: " + file.getName());
     }
@@ -212,7 +201,7 @@ public class MusicPlaylistGUI extends JFrame {
         }
 
         SearchMethod<Song> method;
-        String timeComplexity = "";
+        String timeComplexity;
         String[] methodOptions = {"Linear Search", "Binary Search", "HashMap Search"};
         String methodChoice = (String) JOptionPane.showInputDialog(
                 this,
@@ -263,13 +252,14 @@ public class MusicPlaylistGUI extends JFrame {
             default -> queryComparator = new TitleQueryComparator();
         }
 
-        SearchResult[] results = new SearchResult[1];
-        long timeTaken = measureExecutionTime(() -> {
-            results[0] = SongDispenser.getInstance().search(query, method, queryComparator);
-        });
+        AtomicReference<SearchResult<Song>> resultRef = new AtomicReference<>();
 
-        int foundSongs = results[0].getSongs().size();
-        updateGUI(results[0].getSongs());
+        long timeTaken = measureExecutionTime(() -> resultRef.set(SongDispenser.getInstance().search(query, method, queryComparator)));
+
+        SearchResult<Song> result = resultRef.get();
+
+        int foundSongs = result.getSongs().size();
+        updateGUI(result.getSongs());
 
         JOptionPane.showMessageDialog(this,
                 "🔍 Found " + foundSongs + " out of " + container.getSongs().size() + " songs.\n" +
@@ -339,9 +329,7 @@ public class MusicPlaylistGUI extends JFrame {
 
         // Measure sorting execution time
         AtomicReference<SortResult<Song>> sortedResult = new AtomicReference<>();
-        long timeTaken = measureExecutionTime(() -> {
-            sortedResult.set(SongDispenser.getInstance().sort(sortingMethod, comparator));
-        });
+        long timeTaken = measureExecutionTime(() -> sortedResult.set(SongDispenser.getInstance().sort(sortingMethod, comparator)));
 
         if (!sortedResult.get().getSongs().isEmpty()) {
             updateGUI(sortedResult.get().getSongs());
@@ -396,34 +384,31 @@ public class MusicPlaylistGUI extends JFrame {
         playerState = PlayerState.PLAYING;
         playButton.setText("▶ Play");
 
-        playTimer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (playerState != PlayerState.PLAYING) return;
+        playTimer = new Timer(1000, _ -> {
+            if (playerState != PlayerState.PLAYING) return;
 
-                if (index.get() >= playlistModel.getSize()) {
-                    playTimer.stop();
-                    playerState = PlayerState.STOPPED;
-                    nowPlayingLabel.setText("Playlist finished!");
-                    return;
+            if (index.get() >= playlistModel.getSize()) {
+                playTimer.stop();
+                playerState = PlayerState.STOPPED;
+                nowPlayingLabel.setText("Playlist finished!");
+                return;
+            }
+
+            String songText = playlistModel.get(index.get());
+            Song currentSong = findSongByText(songText);
+
+            if (currentSong != null) {
+                if (remainingDuration.get() == 0) {
+                    remainingDuration.set(currentSong.getDuration());
                 }
 
-                String songText = playlistModel.get(index.get());
-                Song currentSong = findSongByText(songText);
+                nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
+                nowPlayingLabel.setText("Now Playing: " + currentSong.getTitle() + " (" + remainingDuration.get() + "s left)");
+                remainingDuration.getAndDecrement();
 
-                if (currentSong != null) {
-                    if (remainingDuration.get() == 0) {
-                        remainingDuration.set(currentSong.getDuration());
-                    }
-
-                    nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
-                    nowPlayingLabel.setText("Now Playing: " + currentSong.getTitle() + " (" + remainingDuration.get() + "s left)");
-                    remainingDuration.getAndDecrement();
-
-                    if (remainingDuration.get() < 0) {
-                        index.incrementAndGet();
-                        remainingDuration.set(0);
-                    }
+                if (remainingDuration.get() < 0) {
+                    index.incrementAndGet();
+                    remainingDuration.set(0);
                 }
             }
         });
@@ -475,29 +460,26 @@ public class MusicPlaylistGUI extends JFrame {
         nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
         nowPlayingLabel.setText("Now Playing: 🎵 " + song.getTitle() + " (" + remainingDuration.get() + "s left)");
 
-        playTimer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (playerState != PlayerState.PLAYING) return;
+        playTimer = new Timer(1000, _ -> {
+            if (playerState != PlayerState.PLAYING) return;
 
-                remainingDuration.getAndDecrement();
-                if (remainingDuration.get() <= 0) {
-                    playTimer.stop();
-                    playerState = PlayerState.STOPPED;
-                    index.incrementAndGet();
+            remainingDuration.getAndDecrement();
+            if (remainingDuration.get() <= 0) {
+                playTimer.stop();
+                playerState = PlayerState.STOPPED;
+                index.incrementAndGet();
 
-                    if (index.get() < playlistModel.size()) {
-                        String nextSongText = playlistModel.get(index.get());
-                        Song nextSong = findSongByText(nextSongText);
-                        if (nextSong != null) {
-                            playSpecificSong(nextSong, index.get());
-                        }
-                    } else {
-                        nowPlayingLabel.setText("Playlist finished!");
+                if (index.get() < playlistModel.size()) {
+                    String nextSongText = playlistModel.get(index.get());
+                    Song nextSong = findSongByText(nextSongText);
+                    if (nextSong != null) {
+                        playSpecificSong(nextSong, index.get());
                     }
                 } else {
-                    nowPlayingLabel.setText("Now Playing: 🎵 " + song.getTitle() + " (" + remainingDuration.get() + "s left)");
+                    nowPlayingLabel.setText("Playlist finished!");
                 }
+            } else {
+                nowPlayingLabel.setText("Now Playing: 🎵 " + song.getTitle() + " (" + remainingDuration.get() + "s left)");
             }
         });
 

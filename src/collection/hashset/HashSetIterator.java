@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class HashSetIterator<T> implements Iterator<T> {
-    private int currentIndex = 0;
     private final HashSet<T> set;
     private final T[] array;
+    private int currentIndex = 0;
 
     public HashSetIterator(HashSet<T> set) {
         this.set = set;

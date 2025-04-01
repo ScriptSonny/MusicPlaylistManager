@@ -8,12 +8,12 @@ import java.util.Collection;
 
 public class LinearSearch<T extends Comparable<T>> implements SearchMethod<T> {
     @Override
-    public SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator) {
-        SearchResult validSongs = new SearchResult(new DoublyLinkedList<>());
+    public SearchResult<T> search(String query, Collection<T> songs, QueryComparator<T> comparator) {
+        SearchResult<T> validSongs = new SearchResult<T>(new DoublyLinkedList<>());
         if (songs == null) {
             return validSongs;
         }
-        if (query.length() == 0) {
+        if (query.isEmpty()) {
             validSongs.appendSongs(songs);
             return validSongs;
         }

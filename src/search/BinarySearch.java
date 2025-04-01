@@ -8,8 +8,8 @@ import song.querycomparator.QueryComparator;
 import java.util.Collection;
 
 public class BinarySearch<T extends Comparable<T>> implements SearchMethod<T> {
-    public SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator) {
-        SearchResult validSongs = new SearchResult(new BinarySearchTree<>());
+    public SearchResult<T> search(String query, Collection<T> songs, QueryComparator<T> comparator) {
+        SearchResult<T> validSongs = new SearchResult<T>(new BinarySearchTree<>());
 
         if (!(songs instanceof BinarySearchTree<?>)) {
             throw new IllegalArgumentException("Song parameter has to be BinarySearchTree");
@@ -25,7 +25,7 @@ public class BinarySearch<T extends Comparable<T>> implements SearchMethod<T> {
         return validSongs;
     }
 
-    private void searchRecursive(Node<T> node, String query, SearchResult results, QueryComparator<T> comparator) {
+    private void searchRecursive(Node<T> node, String query, SearchResult<T> results, QueryComparator<T> comparator) {
         if (node == null) {
             return;
         }

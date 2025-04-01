@@ -11,10 +11,10 @@ import java.util.Comparator;
 
 public class SongDispenser {
     private static SongDispenser instance;
-    private SongContainer songContainer;
+    private SongContainer<Song> songContainer;
 
     private SongDispenser() {
-        this.songContainer = new Album(new DoublyLinkedList<>());
+        this.songContainer = new Album<Song>(new DoublyLinkedList<>());
     }
 
     public static SongDispenser getInstance() {
@@ -25,18 +25,18 @@ public class SongDispenser {
     }
 
     // Getters and setters
-    public SongContainer getSongContainer() {
+    public SongContainer<Song> getSongContainer() {
         return songContainer;
     }
 
-    public void setSongContainer(SongContainer songContainer) {
+    public void setSongContainer(SongContainer<Song> songContainer) {
         this.songContainer = songContainer;
     }
 
     // Methods
-    public SearchResult search(String query, SearchMethod method, QueryComparator comparator) {
+    public SearchResult<Song> search(String query, SearchMethod<Song> method, QueryComparator<Song> comparator) {
         if (method instanceof BinarySearch) {
-            BinarySearchTree<Song> bst = new BinarySearchTree();
+            BinarySearchTree<Song> bst = new BinarySearchTree<>();
             bst.addAll(songContainer.getSongs());
             return method.search(query, bst, comparator);
         } else {
