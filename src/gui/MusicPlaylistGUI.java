@@ -315,21 +315,12 @@ public class MusicPlaylistGUI extends JFrame
             return;
         }
 
-        Comparator<Song> comparator;
-        switch (comparatorChoice) {
-            case "Artist":
-                comparator = SongComparators.BY_ARTIST;
-                break;
-            case "Year":
-                comparator = SongComparators.BY_DURATION;
-                break;
-            case "Popularity":
-                comparator = SongComparators.BY_POPULARITY;
-                break;
-            default:
-                comparator = SongComparators.BY_TITLE;
-                break;
-        }
+        Comparator<Song> comparator = switch (comparatorChoice) {
+            case "Artist" -> SongComparators.BY_ARTIST;
+            case "Year" -> SongComparators.BY_DURATION;
+            case "Popularity" -> SongComparators.BY_POPULARITY;
+            default -> SongComparators.BY_TITLE;
+        };
 
         // Measure sorting execution time
         AtomicReference<SortResult<Song>> sortedResult = new AtomicReference<>();
@@ -362,11 +353,8 @@ public class MusicPlaylistGUI extends JFrame
             return;
         }
 
-        Iterator<Song> iterator = songs.iterator();
-
-        while (iterator.hasNext())
-        {
-            playlistModel.addElement(iterator.next().toString());
+        for (Song song : songs) {
+            playlistModel.addElement(song.toString());
         }
     }
 
