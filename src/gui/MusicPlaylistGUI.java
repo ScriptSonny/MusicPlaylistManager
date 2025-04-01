@@ -2,6 +2,8 @@ package gui;
 
 import collection.binarysearchtree.BinarySearchTree;
 import collection.doublylinkedlist.DoublyLinkedList;
+import enums.DataStructureType;
+import enums.PlayerState;
 import search.BinarySearch;
 import search.HashMapSearch;
 import search.LinearSearch;
@@ -35,10 +37,9 @@ public class MusicPlaylistGUI extends JFrame
     private Collection<Song> selectedDataStructure;
     private JLabel nowPlayingLabel;
     private Timer playTimer;
-    private boolean isPaused = false;
     private AtomicInteger index = new AtomicInteger(0); // Track song index
     private AtomicInteger remainingDuration = new AtomicInteger(0); // Track remaining duration
-    private boolean playingSong = false;
+    private PlayerState playerState = PlayerState.STOPPED;
 
     public MusicPlaylistGUI()
     {
@@ -110,15 +111,15 @@ public class MusicPlaylistGUI extends JFrame
      */
     private void selectDataStructureAndLoadFile()
     {
-        String[] dataStructures = {"Doubly Linked List", "Binary Search Tree (BST)", "HashSet"};
-        String choice = (String) JOptionPane.showInputDialog(
+        DataStructureType choice = (DataStructureType) JOptionPane.showInputDialog(
                 this,
-                "Select a datastructure:",
+                "Select a datastructure",
                 "Choose Datastructure",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                dataStructures,
-                dataStructures[0]);
+                DataStructureType.values(),
+                DataStructureType.DOUBLY_LINKED_LIST // default
+        );
 
         if (choice == null)
         {
@@ -128,13 +129,13 @@ public class MusicPlaylistGUI extends JFrame
         // Initialise chose datastructure
         switch (choice)
         {
-            case "Doubly Linked List":
+            case DOUBLY_LINKED_LIST:
                 selectedDataStructure = new DoublyLinkedList<>();
                 break;
-            case "Binary Search Tree (BST)":
+            case BINARY_SEARCH_TREE:
                 selectedDataStructure = new BinarySearchTree<>();
                 break;
-            case "HashSet":
+            case HASH_SET:
                 selectedDataStructure = new HashSet<>();
                 break;
             default:
@@ -338,7 +339,9 @@ public class MusicPlaylistGUI extends JFrame
     }
 
     /**
-     * Simulates the playing of songs in displayed order
+     * Starts or resumes playback of the playlist.
+     * If already playing, toggle pause.
+     * Uses a Swing Timer to simulate playback in real-time
      */
     private void playSongs() {
         if (playlistModel.isEmpty()) {
@@ -347,48 +350,48 @@ public class MusicPlaylistGUI extends JFrame
         }
 
         // If already playing, toggle pause
-        if (playTimer != null && playTimer.isRunning()) {
+        if (playerState == PlayerState.PLAYING) {
             playTimer.stop();
-            isPaused = true;
+            playerState = PlayerState.PAUSED;
             playButton.setText("⏸ Paused");
             nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
             nowPlayingLabel.setText("Paused: " + playlistModel.get(index.get()) + " (" + remainingDuration.get() + "s left)");
             return;
         }
 
-        isPaused = false;
+        playerState = PlayerState.PLAYING;
         playButton.setText("▶ Play");
 
         playTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!playingSong) {
-                    // Start next song if no song is currently playing
-                    if (index.get() >= playlistModel.getSize()) {
-                        playTimer.stop();
-                        nowPlayingLabel.setText("Playlist finished!");
-                        return;
+                if (playerState != PlayerState.PLAYING) return;
+
+                if (index.get() >= playlistModel.getSize())
+                {
+                    playTimer.stop();
+                    playerState = PlayerState.STOPPED;
+                    nowPlayingLabel.setText("Playlist finished!");
+                    return;
+                }
+
+                String songText = playlistModel.get(index.get());
+                Song currentSong = findSongByText(songText);
+
+                if (currentSong != null) {
+                    if (remainingDuration.get() == 0)
+                    {
+                        remainingDuration.set(currentSong.getDuration());
                     }
 
-                    String songText = playlistModel.get(index.get());
-                    Song currentSong = findSongByText(songText);
-
-                    if (currentSong != null) {
-                        remainingDuration.set(remainingDuration.get() == 0 ? currentSong.getDuration() : remainingDuration.get());
-                        nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
-                        nowPlayingLabel.setText("Now Playing: " + currentSong.getTitle() + " (" + remainingDuration.get() + "s left)");
-                        playingSong = true;
-                    }
-                } else {
-                    // Countdown and update display
+                    nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
+                    nowPlayingLabel.setText("Now Playing: " + currentSong.getTitle() + " (" + remainingDuration.get() + "s left)");
                     remainingDuration.getAndDecrement();
-                    if (remainingDuration.get() <= 0) {
-                        playingSong = false;
+
+                    if (remainingDuration.get() < 0)
+                    {
+                        index.incrementAndGet();
                         remainingDuration.set(0);
-                        index.incrementAndGet(); // Move to next song
-                    } else {
-                        nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
-                        nowPlayingLabel.setText("Now Playing: " + playlistModel.get(index.get()) + " (" + remainingDuration.get() + "s left)");
                     }
                 }
             }
@@ -438,8 +441,7 @@ public class MusicPlaylistGUI extends JFrame
 
         index.set(songIndex);
         remainingDuration.set(song.getDuration());
-        playingSong = true;
-        isPaused = false;
+        playerState = PlayerState.PLAYING;
         playButton.setText("⏸ Pause");
 
         nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
@@ -448,11 +450,14 @@ public class MusicPlaylistGUI extends JFrame
         playTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (playerState != PlayerState.PLAYING) return;
+
                 remainingDuration.getAndDecrement();
                 if (remainingDuration.get() <= 0) {
                     playTimer.stop();
-                    playingSong = false;
+                    playerState = PlayerState.STOPPED;
                     index.incrementAndGet();
+
                     if (index.get() < playlistModel.size()) {
                         String nextSongText = playlistModel.get(index.get());
                         Song nextSong = findSongByText(nextSongText);
