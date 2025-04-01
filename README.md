@@ -52,12 +52,12 @@ Blinding Lights,The Weeknd,POP,200,95
 ### Setup
 
 1. **Clone the repository**
-
    ```bash
-   git clone https://github.com/yourusername/MusicPlaylistManager.git
+   git clone https://github.com/ScriptSonny/MusicPlaylistManager.git
    cd MusicPlaylistManager
+   ```
 2. **Open the project**
-3. **Build and run the application (``MusicPlaylistGui``)**
+3. **Build and run the application (``MusicPlaylistGUI``)**
 4. **Load your playlist**
 
 ### 🧪 Testing the application
