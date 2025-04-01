@@ -18,7 +18,7 @@
 - ↕️ Sort songs by:
     - Title
     - Artist
-    - Duration (Year)
+    - Duration
     - Popularity
 - 🚀 Choose sorting algorithms:
     - **QuickSort**
