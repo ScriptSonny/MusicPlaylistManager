@@ -1,14 +1,12 @@
 package search;
 
 import collection.doublylinkedlist.DoublyLinkedList;
-import collection.hashmap.HashMap;
 import song.SearchResult;
 import song.querycomparator.QueryComparator;
 
 import java.util.Collection;
 
-public class HashMapSearch <T extends Comparable<T>> implements SearchMethod <T>
-{
+public class HashMapSearch<T extends Comparable<T>> implements SearchMethod<T> {
     @Override
     public SearchResult<T> search(String query, Collection<T> songs, QueryComparator<T> comparator) {
         SearchResult<T> validSongs = new SearchResult<T>(new DoublyLinkedList<>());

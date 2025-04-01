@@ -11,6 +11,7 @@ import java.util.List;
 public class QuickSort<T extends Comparable<T>> implements SortingMethod<T> {
     /**
      * Method to sort songs in a list.
+     *
      * @param songs - Songs to be sorted.
      * @return - Returns a list of sorted songs.
      */
@@ -35,8 +36,9 @@ public class QuickSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Sorts a list of songs using the QuickSort algorithm.
+     *
      * @param list - The list of songs to be sorted.
-     * @param low - The starting index of the subarray to be sorted.
+     * @param low  - The starting index of the subarray to be sorted.
      * @param high - The ending index of the subarray to be sorted.
      */
     private void quickSort(List<T> list, int low, int high, Comparator<T> comparator) {
@@ -49,8 +51,9 @@ public class QuickSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Partitions the list around a pivot element, placing smaller elements to the left and larger elements to the right.
+     *
      * @param list - The list of songs to be sorted.
-     * @param low - The starting index of the subarray to be sorted.
+     * @param low  - The starting index of the subarray to be sorted.
      * @param high - The ending index of the subarray to be sorted.
      * @return - The index position of the pivot after partitioning.
      */
@@ -71,9 +74,10 @@ public class QuickSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Swaps to elements in the list.
+     *
      * @param list - The list of songs.
-     * @param i - The index of the first element.
-     * @param j - The index of the second element.
+     * @param i    - The index of the first element.
+     * @param j    - The index of the second element.
      */
     private void swap(List<T> list, int i, int j) {
         T temp = list.get(i);

@@ -1,7 +1,6 @@
 package enums;
 
-public enum PlayerState
-{
+public enum PlayerState {
     STOPPED,
     PLAYING,
     PAUSED

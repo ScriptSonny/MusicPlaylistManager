@@ -11,8 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataImporter
-{
+public class DataImporter {
     // CSV Importfunction
     public static List<Song> loadSongsFromCSV(File file) {
         List<Song> songs = new ArrayList<>();

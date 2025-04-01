@@ -1,7 +1,7 @@
 package sorting;
 
-import song.SortResult;
 import collection.doublylinkedlist.DoublyLinkedList;
+import song.SortResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +11,7 @@ import java.util.List;
 public class MergeSort<T extends Comparable<T>> implements SortingMethod<T> {
     /**
      * Sorts a collection of songs using the MergeSort algorithm.
+     *
      * @param songs - The collection of songs to be sorted.
      * @return - Returns a SortResult containing the sorted list of songs.
      */
@@ -38,6 +39,7 @@ public class MergeSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Sorts the given list using MergeSort.
+     *
      * @param list - The list of songs to be sorted.
      * @return - A sorted list of songs.
      */
@@ -55,7 +57,8 @@ public class MergeSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Merges two sorted lists into a single sorted list.
-     * @param left - The left sublist.
+     *
+     * @param left  - The left sublist.
      * @param right - The right sublist.
      * @return - A merged and sorted list.
      */
@@ -64,8 +67,7 @@ public class MergeSort<T extends Comparable<T>> implements SortingMethod<T> {
         int i = 0, j = 0;
 
         while (i < left.size() && j < right.size()) {
-            if (comparator.compare(left.get(i), right.get(j)) <= 0)
-            {
+            if (comparator.compare(left.get(i), right.get(j)) <= 0) {
                 merged.add(left.get(i));
                 i++;
             } else {

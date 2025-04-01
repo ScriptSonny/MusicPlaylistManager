@@ -11,6 +11,7 @@ import java.util.List;
 public class BubbleSort<T extends Comparable<T>> implements SortingMethod<T> {
     /**
      * Sort a collection of songs using the BubbleSort algorithm.
+     *
      * @param songs - The collection of songs to be sorted.
      * @return - Returns a SortResult containing the sorted list of songs.
      */
@@ -38,6 +39,7 @@ public class BubbleSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Performs BubbleSort on the given list of songs.
+     *
      * @param list - The list of songs to be sorted.
      */
     private void bubbleSort(List<T> list, Comparator<T> comparator) {
@@ -57,9 +59,10 @@ public class BubbleSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Swaps to elements in the list.
+     *
      * @param list - The list of songs.
-     * @param i - The index of the first element.
-     * @param j - The index of the second element.
+     * @param i    - The index of the first element.
+     * @param j    - The index of the second element.
      */
     private void swap(List<T> list, int i, int j) {
         T temp = list.get(i);

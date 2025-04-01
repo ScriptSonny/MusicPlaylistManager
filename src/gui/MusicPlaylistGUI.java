@@ -20,7 +20,6 @@ import sorting.SortingMethod;
 import utils.DataImporter;
 
 import javax.swing.*;
-import javax.swing.Timer;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,25 +27,28 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class MusicPlaylistGUI extends JFrame
-{
-    private JButton loadButton, sortButton, playButton, searchButton;
-    private JTextField searchField;
-    private JList<String> playlistDisplay;
-    private DefaultListModel<String> playlistModel;
-    private JLabel nowPlayingLabel;
+public class MusicPlaylistGUI extends JFrame {
+    private final JButton loadButton;
+    private final JButton sortButton;
+    private final JButton playButton;
+    private final JButton searchButton;
+    private final JTextField searchField;
+    private final JList<String> playlistDisplay;
+    private final DefaultListModel<String> playlistModel;
+    private final JLabel nowPlayingLabel;
     private Timer playTimer;
-    private AtomicInteger index = new AtomicInteger(0); // Track song index
-    private AtomicInteger remainingDuration = new AtomicInteger(0); // Track remaining duration
+    private final AtomicInteger index = new AtomicInteger(0); // Track song index
+    private final AtomicInteger remainingDuration = new AtomicInteger(0); // Track remaining duration
     private PlayerState playerState = PlayerState.STOPPED;
 
-    public MusicPlaylistGUI()
-    {
+    public MusicPlaylistGUI() {
         setTitle("Music Playlist Manager");
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,7 +61,7 @@ public class MusicPlaylistGUI extends JFrame
         JScrollPane scrollPane = new JScrollPane(playlistDisplay);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Statuslabel to display current number
+        // Status label to display current number
         nowPlayingLabel = new JLabel("Now Playing: None");
         nowPlayingLabel.setFont(new Font("Arial", Font.BOLD, 14));
         add(nowPlayingLabel, BorderLayout.NORTH);
@@ -87,20 +89,16 @@ public class MusicPlaylistGUI extends JFrame
         playButton.addActionListener(e -> playSongs());
         sortButton.addActionListener(e -> sortPlaylist());
 
-        playlistDisplay.addMouseListener(new MouseAdapter()
-        {
+        playlistDisplay.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e)
-            {
+            public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) // double click
                 {
                     int index = playlistDisplay.locationToIndex(e.getPoint());
-                    if (index != -1)
-                    {
+                    if (index != -1) {
                         String selectedSongText = playlistModel.get(index);
                         Song selectedSong = findSongByText(selectedSongText);
-                        if (selectedSong != null)
-                        {
+                        if (selectedSong != null) {
                             playSpecificSong(selectedSong, index);
                         }
                     }
@@ -109,12 +107,18 @@ public class MusicPlaylistGUI extends JFrame
         });
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            MusicPlaylistGUI gui = new MusicPlaylistGUI();
+            gui.setVisible(true);
+        });
+    }
+
     /**
      * First opens a dropdown to select a datastructure.
      * Then opens filechooser to select a dataset
      */
-    private void selectDataStructureAndLoadFile()
-    {
+    private void selectDataStructureAndLoadFile() {
         DataStructureType choice = (DataStructureType) JOptionPane.showInputDialog(
                 this,
                 "Select a datastructure",
@@ -125,12 +129,11 @@ public class MusicPlaylistGUI extends JFrame
                 DataStructureType.DOUBLY_LINKED_LIST // default
         );
 
-        if (choice == null)
-        {
+        if (choice == null) {
             return; // No choice made, stop
         }
 
-        SongContainer container = switch (choice) {
+        SongContainer<Song> container = switch (choice) {
             case DOUBLY_LINKED_LIST -> new Playlist(new DoublyLinkedList<>());
             case BINARY_SEARCH_TREE -> new Playlist(new BinarySearchTree<>());
             case HASH_SET -> new Playlist(new HashSet<>());
@@ -149,22 +152,19 @@ public class MusicPlaylistGUI extends JFrame
         fileChooser.setDialogTitle("Select dataset (CSV");
         fileChooser.addChoosableFileFilter(new FileFilter() {
             @Override
-            public boolean accept(File f)
-            {
+            public boolean accept(File f) {
                 return f.isFile() && f.getName().toLowerCase().endsWith("csv");
             }
-            
+
             @Override
-            public String getDescription()
-            {
+            public String getDescription() {
                 return "CSV files";
             }
         });
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         int result = fileChooser.showOpenDialog(this);
 
-        if (result == JFileChooser.APPROVE_OPTION)
-        {
+        if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             loadDataFromFile(selectedFile);
         }
@@ -173,43 +173,40 @@ public class MusicPlaylistGUI extends JFrame
     /**
      * Loads the songs from the dataset and puts them in the SongDispenser.
      * Also updates the GUI to reflect the laoded songs.
+     *
      * @param file - the selected dataset file.
      */
-    private void loadDataFromFile(File file)
-    {
+    private void loadDataFromFile(File file) {
         List<Song> songs = DataImporter.loadSongsFromCSV(file);
 
-        if (songs.isEmpty())
-        {
+        if (songs.isEmpty()) {
             JOptionPane.showMessageDialog(this, "⚠ No valid data found in file!");
             return;
         }
 
         // Set the loaded songs into SongDispenser via a new Playlist
-        SongContainer container = new Playlist(songs);
+        Playlist container = new Playlist(songs);
         SongDispenser.getInstance().setSongContainer(container);
         updateGUI(songs);
         SongDispenser.getInstance().setSongContainer(new Playlist(songs));
 
         JOptionPane.showMessageDialog(this, "🎧 Dataset loaded from: " + file.getName());
     }
-    
+
     /**
      * Opens a dialogue to choose a search method.
      * Then renders the found songs using the given query.
+     *
      * @param query - search query.
      */
-    private void searchFromData(String query)
-    {
+    private void searchFromData(String query) {
         SongContainer<Song> container = SongDispenser.getInstance().getSongContainer();
-        if (container == null || container.getSongs().isEmpty())
-        {
+        if (container == null || container.getSongs().isEmpty()) {
             JOptionPane.showMessageDialog(this, "No songs available for search!");
             return;
         }
 
-        if (query == null || query.trim().isEmpty())
-        {
+        if (query == null || query.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a search query.");
             return;
         }
@@ -228,8 +225,7 @@ public class MusicPlaylistGUI extends JFrame
 
         if (methodChoice == null) return;
 
-        switch (methodChoice)
-        {
+        switch (methodChoice) {
             case "Linear Search" -> {
                 method = new LinearSearch<>();
                 timeComplexity = "O(n) - Worst case";
@@ -360,14 +356,13 @@ public class MusicPlaylistGUI extends JFrame
 
     /**
      * Clears the current view, then renders the given songs.
+     *
      * @param songs - Collection of songs to render.
      */
-    private void updateGUI(Collection<Song> songs)
-    {
+    private void updateGUI(Collection<Song> songs) {
         playlistModel.clear();
 
-        if (songs.isEmpty())
-        {
+        if (songs.isEmpty()) {
             JOptionPane.showMessageDialog(this, "⚠ No songs to render!");
             return;
         }
@@ -406,8 +401,7 @@ public class MusicPlaylistGUI extends JFrame
             public void actionPerformed(ActionEvent e) {
                 if (playerState != PlayerState.PLAYING) return;
 
-                if (index.get() >= playlistModel.getSize())
-                {
+                if (index.get() >= playlistModel.getSize()) {
                     playTimer.stop();
                     playerState = PlayerState.STOPPED;
                     nowPlayingLabel.setText("Playlist finished!");
@@ -418,8 +412,7 @@ public class MusicPlaylistGUI extends JFrame
                 Song currentSong = findSongByText(songText);
 
                 if (currentSong != null) {
-                    if (remainingDuration.get() == 0)
-                    {
+                    if (remainingDuration.get() == 0) {
                         remainingDuration.set(currentSong.getDuration());
                     }
 
@@ -427,8 +420,7 @@ public class MusicPlaylistGUI extends JFrame
                     nowPlayingLabel.setText("Now Playing: " + currentSong.getTitle() + " (" + remainingDuration.get() + "s left)");
                     remainingDuration.getAndDecrement();
 
-                    if (remainingDuration.get() < 0)
-                    {
+                    if (remainingDuration.get() < 0) {
                         index.incrementAndGet();
                         remainingDuration.set(0);
                     }
@@ -442,18 +434,16 @@ public class MusicPlaylistGUI extends JFrame
 
     /**
      * Searches Song-object that equals with the text in the list
+     *
      * @param songText text to search for
      * @return found Song object
      */
-    private Song findSongByText(String songText)
-    {
+    private Song findSongByText(String songText) {
         SongContainer<Song> container = SongDispenser.getInstance().getSongContainer();
         if (container == null || container.getSongs().isEmpty()) return null;
 
-        for (Song song : container.getSongs())
-        {
-            if (song.toString().equals(songText))
-            {
+        for (Song song : container.getSongs()) {
+            if (song.toString().equals(songText)) {
                 return song;
             }
         }
@@ -462,20 +452,18 @@ public class MusicPlaylistGUI extends JFrame
 
     /**
      * Play a specific song at the given index.
-     * @param song song to play
+     *
+     * @param song      song to play
      * @param songIndex index of the song
      */
-    private void playSpecificSong(Song song, int songIndex)
-    {
-        if (song == null)
-        {
+    private void playSpecificSong(Song song, int songIndex) {
+        if (song == null) {
             JOptionPane.showMessageDialog(this, "Could not find selected song!");
             return;
         }
 
         // Stop current playing song (if necessary)
-        if (playTimer != null && playTimer.isRunning())
-        {
+        if (playTimer != null && playTimer.isRunning()) {
             playTimer.stop();
         }
 
@@ -519,6 +507,7 @@ public class MusicPlaylistGUI extends JFrame
 
     /**
      * measure execution time of algorithms
+     *
      * @param action what to measure
      * @return time in milliseconds
      */
@@ -526,13 +515,5 @@ public class MusicPlaylistGUI extends JFrame
         long startTime = System.nanoTime();
         action.run();
         return (System.nanoTime() - startTime) / 1_000_000;
-    }
-
-    public static void main(String[] args)
-    {
-        SwingUtilities.invokeLater(() -> {
-            MusicPlaylistGUI gui = new MusicPlaylistGUI();
-            gui.setVisible(true);
-        });
     }
 }

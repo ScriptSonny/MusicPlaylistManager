@@ -1,7 +1,6 @@
 package song;
 
-public enum Genre
-{
+public enum Genre {
     POP,
     ROCK,
     METAL,

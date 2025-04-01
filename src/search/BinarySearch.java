@@ -7,7 +7,7 @@ import song.querycomparator.QueryComparator;
 
 import java.util.Collection;
 
-public class BinarySearch <T extends Comparable<T>> implements SearchMethod <T> {
+public class BinarySearch<T extends Comparable<T>> implements SearchMethod<T> {
     public SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator) {
         SearchResult validSongs = new SearchResult(new BinarySearchTree<>());
 
@@ -31,8 +31,7 @@ public class BinarySearch <T extends Comparable<T>> implements SearchMethod <T> 
         }
 
         T song = node.getData();
-        if (comparator.compare(song, query))
-        {
+        if (comparator.compare(song, query)) {
             results.appendSong(song);
         }
 
