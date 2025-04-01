@@ -1,11 +1,11 @@
 package search;
 
 import song.SearchResult;
-import song.Song;
+import song.querycomparator.QueryComparator;
 
 import java.util.Collection;
 
-public interface SearchMethod
+public interface SearchMethod <T extends Comparable<T>>
 {
-    public abstract <T extends Collection<Song>> SearchResult search(String query, T songs);
+    public abstract SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator);
 }

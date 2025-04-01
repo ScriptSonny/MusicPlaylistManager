@@ -1,29 +1,27 @@
 package song;
 
-import collection.doublylinkedlist.DoublyLinkedList;
-
 import java.util.Collection;
 
-public abstract class SongContainer
+public abstract class SongContainer<T extends Comparable<T>>
 {
-    private DoublyLinkedList<Song> songs;
+    private Collection<T> songs;
     
-    public SongContainer()
-    {
-        this.songs = new DoublyLinkedList<>();
-    }
-    
-    public DoublyLinkedList<Song> getSongs()
-    {
-        return this.songs;
-    }
-    
-    public void setSongs(DoublyLinkedList<Song> songs)
+    public SongContainer(Collection<T> songs)
     {
         this.songs = songs;
     }
     
-    public void appendSong(Song newSong)
+    public Collection<T> getSongs()
+    {
+        return this.songs;
+    }
+    
+    public void setSongs(Collection<T> songs)
+    {
+        this.songs = songs;
+    }
+    
+    public void appendSong(T newSong)
     {
         if (newSong == null)
         {
@@ -32,7 +30,7 @@ public abstract class SongContainer
         this.songs.add(newSong);
     }
     
-    public void appendSongs(Collection<Song> songs)
+    public void appendSongs(Collection<T> songs)
     {
         this.songs.addAll(songs);
     }

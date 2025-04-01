@@ -1,17 +1,17 @@
 package search;
 
+import collection.doublylinkedlist.DoublyLinkedList;
 import song.SearchResult;
-import song.Song;
-import utils.StringQueryComparator;
+import song.querycomparator.QueryComparator;
 
 import java.util.Collection;
 
-public class LinearSearch implements SearchMethod
+public class LinearSearch <T extends Comparable<T>> implements SearchMethod <T>
 {
     @Override
-    public <T extends Collection<Song>> SearchResult search(String query, T songs)
+    public SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator)
     {
-        SearchResult validSongs = new SearchResult();
+        SearchResult validSongs = new SearchResult(new DoublyLinkedList<>());
         if (songs == null)
         {
             return validSongs;
@@ -21,9 +21,9 @@ public class LinearSearch implements SearchMethod
             validSongs.appendSongs(songs);
             return validSongs;
         }
-        for (Song song : songs)
+        for (T song : songs)
         {
-            if (StringQueryComparator.compare(song.getTitle(), query) || StringQueryComparator.compare(song.getArtist().getName(), query))
+            if (comparator.compare(song, query))
             {
                 validSongs.appendSong(song);
             }

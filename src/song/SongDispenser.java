@@ -1,8 +1,13 @@
 package song;
 
+import collection.binarysearchtree.BinarySearchTree;
+import collection.doublylinkedlist.DoublyLinkedList;
 import search.BinarySearch;
 import search.SearchMethod;
+import song.querycomparator.QueryComparator;
 import sorting.SortingMethod;
+
+import java.util.Comparator;
 
 public class SongDispenser
 {
@@ -11,7 +16,7 @@ public class SongDispenser
 
     private SongDispenser()
     {
-        this.songContainer = new Album();
+        this.songContainer = new Album(new DoublyLinkedList<>());
     }
 
     public static SongDispenser getInstance()
@@ -35,20 +40,22 @@ public class SongDispenser
     }
 
     // Methods
-    public SearchResult search(String query, SearchMethod method)
+    public SearchResult search(String query, SearchMethod method, QueryComparator comparator)
     {
         if (method instanceof BinarySearch)
         {
-            return method.search(query, songContainer.getSongs().toBST());
+            BinarySearchTree<Song> bst = new BinarySearchTree();
+            bst.addAll(songContainer.getSongs());
+            return method.search(query, bst, comparator);
         }
         else
         {
-            return method.search(query, songContainer.getSongs());
+            return method.search(query, songContainer.getSongs(), comparator);
         }
     }
 
-    public SortResult sort(SortingMethod method)
+    public SortResult<Song> sort(SortingMethod<Song> method, Comparator<Song> comparator)
     {
-        return method.sort(songContainer.getSongs());
+        return method.sort(songContainer.getSongs(), comparator);
     }
 }

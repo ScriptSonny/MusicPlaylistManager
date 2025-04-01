@@ -1,9 +1,11 @@
 package song;
 
+import java.util.Collection;
+
 public class Album extends SongContainer
 {
-    public Album()
+    public Album(Collection<Song> songs)
     {
-        super();
+        super(songs);
     }
 }

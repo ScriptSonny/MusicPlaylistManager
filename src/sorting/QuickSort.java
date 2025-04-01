@@ -1,37 +1,33 @@
 package sorting;
 
-import song.Song;
-import song.SongComparators;
-import song.SortResult;
 import collection.doublylinkedlist.DoublyLinkedList;
+import song.SortResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
-public class QuickSort implements SortingMethod {
+public class QuickSort<T extends Comparable<T>> implements SortingMethod<T> {
     /**
      * Method to sort songs in a list.
      * @param songs - Songs to be sorted.
      * @return - Returns a list of sorted songs.
      */
     @Override
-    public SortResult sort(Collection<Song> songs) {
+    public SortResult<T> sort(Collection<T> songs, Comparator<T> comparator) {
         if (songs == null || songs.isEmpty()) {
-            return new SortResult();
+            return new SortResult<>(new DoublyLinkedList<T>());
         }
 
-        List<Song> songList = new ArrayList<>();
-        for (Song song : songs) {
-            songList.add(song);
-        }
+        List<T> songList = new ArrayList<>(songs);
 
-        quickSort(songList, 0, songList.size() - 1);
+        quickSort(songList, 0, songList.size() - 1, comparator);
 
-        DoublyLinkedList<Song> sortedList = new DoublyLinkedList<>();
+        DoublyLinkedList<T> sortedList = new DoublyLinkedList<>();
         sortedList.addAll(songList);
 
-        SortResult sortedResult = new SortResult();
+        SortResult<T> sortedResult = new SortResult<>(new DoublyLinkedList<T>());
         sortedResult.setSongs(sortedList);
 
         return sortedResult;
@@ -43,11 +39,11 @@ public class QuickSort implements SortingMethod {
      * @param low - The starting index of the subarray to be sorted.
      * @param high - The ending index of the subarray to be sorted.
      */
-    private void quickSort(List<Song> list, int low, int high) {
+    private void quickSort(List<T> list, int low, int high, Comparator<T> comparator) {
         if (low < high) {
-            int pivotIndex = partition(list, low, high);
-            quickSort(list, low, pivotIndex - 1);
-            quickSort(list, pivotIndex + 1, high);
+            int pivotIndex = partition(list, low, high, comparator);
+            quickSort(list, low, pivotIndex - 1, comparator);
+            quickSort(list, pivotIndex + 1, high, comparator);
         }
     }
 
@@ -58,13 +54,12 @@ public class QuickSort implements SortingMethod {
      * @param high - The ending index of the subarray to be sorted.
      * @return - The index position of the pivot after partitioning.
      */
-    private int partition(List<Song> list, int low, int high) {
-        Song pivot = list.get(high);
+    private int partition(List<T> list, int low, int high, Comparator<T> comparator) {
+        T pivot = list.get(high);
         int i = low - 1;
 
         for (int j = low; j < high; j++) {
-            if (SongComparators.BY_TITLE.compare(list.get(j), pivot) <= 0)
-            {
+            if (comparator.compare(list.get(j), pivot) <= 0) {
                 i++;
                 swap(list, i, j);
             }
@@ -80,8 +75,8 @@ public class QuickSort implements SortingMethod {
      * @param i - The index of the first element.
      * @param j - The index of the second element.
      */
-    private void swap(List<Song> list, int i, int j) {
-        Song temp = list.get(i);
+    private void swap(List<T> list, int i, int j) {
+        T temp = list.get(i);
         list.set(i, list.get(j));
         list.set(j, temp);
     }

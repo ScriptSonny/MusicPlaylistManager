@@ -1,7 +1,5 @@
 package collection.doublylinkedlist;
 
-import collection.binarysearchtree.BinarySearchTree;
-
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -13,13 +11,6 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T>
     public DoublyLinkedList()
     {
         this.clear();
-    }
-    
-    public BinarySearchTree<T> toBST()
-    {
-        BinarySearchTree<T> tree = new BinarySearchTree<T>();
-        tree.addAll(this);
-        return tree;
     }
     
     @Override
