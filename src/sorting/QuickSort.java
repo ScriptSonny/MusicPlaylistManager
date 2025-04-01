@@ -1,8 +1,7 @@
 package sorting;
 
-import song.Song;
-import song.SortResult;
 import collection.doublylinkedlist.DoublyLinkedList;
+import song.SortResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +17,7 @@ public class QuickSort<T extends Comparable<T>> implements SortingMethod<T> {
     @Override
     public SortResult<T> sort(Collection<T> songs, Comparator<T> comparator) {
         if (songs == null || songs.isEmpty()) {
-            return new SortResult<>();
+            return new SortResult<>(new DoublyLinkedList<T>());
         }
 
         List<T> songList = new ArrayList<>(songs);
@@ -28,7 +27,7 @@ public class QuickSort<T extends Comparable<T>> implements SortingMethod<T> {
         DoublyLinkedList<T> sortedList = new DoublyLinkedList<>();
         sortedList.addAll(songList);
 
-        SortResult<T> sortedResult = new SortResult<>();
+        SortResult<T> sortedResult = new SortResult<>(new DoublyLinkedList<T>());
         sortedResult.setSongs(sortedList);
 
         return sortedResult;

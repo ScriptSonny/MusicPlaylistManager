@@ -1,5 +1,6 @@
 package search;
 
+import collection.doublylinkedlist.DoublyLinkedList;
 import collection.hashmap.HashMap;
 import song.SearchResult;
 import song.querycomparator.QueryComparator;
@@ -11,7 +12,7 @@ public class HashMapSearch <T extends Comparable<T>> implements SearchMethod <T>
     @Override
     public SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator)
     {
-        SearchResult validSongs = new SearchResult();
+        SearchResult validSongs = new SearchResult(new DoublyLinkedList<>());
         if (songs == null)
         {
             return validSongs;

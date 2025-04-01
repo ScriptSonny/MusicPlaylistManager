@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public class BinarySearch <T extends Comparable<T>> implements SearchMethod <T> {
     public SearchResult search(String query, Collection<T> songs, QueryComparator<T> comparator) {
-        SearchResult validSongs = new SearchResult();
+        SearchResult validSongs = new SearchResult(new BinarySearchTree<>());
 
         if (!(songs instanceof BinarySearchTree<?>)) {
             throw new IllegalArgumentException("Song parameter has to be BinarySearchTree");

@@ -1,5 +1,7 @@
 package song;
 
+import collection.binarysearchtree.BinarySearchTree;
+import collection.doublylinkedlist.DoublyLinkedList;
 import search.BinarySearch;
 import search.SearchMethod;
 import song.querycomparator.QueryComparator;
@@ -14,7 +16,7 @@ public class SongDispenser
 
     private SongDispenser()
     {
-        this.songContainer = new Album();
+        this.songContainer = new Album(new DoublyLinkedList<>());
     }
 
     public static SongDispenser getInstance()
@@ -42,7 +44,9 @@ public class SongDispenser
     {
         if (method instanceof BinarySearch)
         {
-            return method.search(query, songContainer.getSongs().toBST(), comparator);
+            BinarySearchTree<Song> bst = new BinarySearchTree();
+            bst.addAll(songContainer.getSongs());
+            return method.search(query, bst, comparator);
         }
         else
         {
