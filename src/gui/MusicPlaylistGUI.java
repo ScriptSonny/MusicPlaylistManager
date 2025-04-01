@@ -267,7 +267,7 @@ public class MusicPlaylistGUI extends JFrame
      */
     private void sortPlaylist() {
         String[] sortingMethods = {"QuickSort", "MergeSort", "BubbleSort"};
-        String choice = (String) JOptionPane.showInputDialog(
+        String methodChoice = (String) JOptionPane.showInputDialog(
                 this,
                 "Select a sorting method:",
                 "Choose Sorting Method",
@@ -276,24 +276,24 @@ public class MusicPlaylistGUI extends JFrame
                 sortingMethods,
                 sortingMethods[0]);
 
-        if (choice == null) {
+        if (methodChoice == null) {
             return;
         }
 
         SortingMethod<Song> sortingMethod;
         String timeComplexity;
 
-        switch (choice) {
+        switch (methodChoice) {
             case "QuickSort":
-                sortingMethod = new QuickSort<Song>();
+                sortingMethod = new QuickSort<>();
                 timeComplexity = "Average: O(n log n), Worst: O(n²)";
                 break;
             case "MergeSort":
-                sortingMethod = new MergeSort<Song>();
+                sortingMethod = new MergeSort<>();
                 timeComplexity = "O(n log n)";
                 break;
             case "BubbleSort":
-                sortingMethod = new BubbleSort<Song>();
+                sortingMethod = new BubbleSort<>();
                 timeComplexity = "O(n²) (Worst case)";
                 break;
             default:
@@ -301,14 +301,46 @@ public class MusicPlaylistGUI extends JFrame
                 return;
         }
 
+        String[] comparatorOptions = {"Title", "Artist", "Year", "Popularity"};
+        String comparatorChoice = (String) JOptionPane.showInputDialog(
+                this,
+                "Select a sort criterion:",
+                "Choose Comparator",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                comparatorOptions,
+                comparatorOptions[0]);
+
+        if (comparatorChoice == null) {
+            return;
+        }
+
+        Comparator<Song> comparator;
+        switch (comparatorChoice) {
+            case "Artist":
+                comparator = SongComparators.BY_ARTIST;
+                break;
+            case "Year":
+                comparator = SongComparators.BY_DURATION;
+                break;
+            case "Popularity":
+                comparator = SongComparators.BY_POPULARITY;
+                break;
+            default:
+                comparator = SongComparators.BY_TITLE;
+                break;
+        }
+
         // Measure sorting execution time
         AtomicReference<SortResult<Song>> sortedResult = new AtomicReference<>();
-        long timeTaken = measureExecutionTime(() -> sortedResult.set(SongDispenser.getInstance().sort(sortingMethod)));
+        long timeTaken = measureExecutionTime(() -> {
+            sortedResult.set(SongDispenser.getInstance().sort(sortingMethod, comparator));
+        });
 
         if (!sortedResult.get().getSongs().isEmpty()) {
             updateGUI(sortedResult.get().getSongs());
             JOptionPane.showMessageDialog(this,
-                    "✅ Playlist sorted using " + choice + "!\n" +
+                    "✅ Playlist sorted using " + methodChoice + " by " + comparatorChoice + "!\n" +
                             "⏳ Sorting took: " + timeTaken + " ms\n" +
                             "🕒 Time Complexity: " + timeComplexity);
         } else {
