@@ -11,6 +11,7 @@ public class Node<K, V> {
         this.next = null;
     }
 
+    // Getters and setters
     public K getKey() {
         return this.key;
     }

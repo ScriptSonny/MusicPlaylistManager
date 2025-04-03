@@ -11,7 +11,6 @@ import java.util.List;
 public class MergeSort<T extends Comparable<T>> implements SortingMethod<T> {
     /**
      * Sorts a collection of songs using the MergeSort algorithm.
-     *
      * @param songs - The collection of songs to be sorted.
      * @return - Returns a SortResult containing the sorted list of songs.
      */
@@ -39,7 +38,6 @@ public class MergeSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Sorts the given list using MergeSort.
-     *
      * @param list - The list of songs to be sorted.
      * @return - A sorted list of songs.
      */
@@ -57,7 +55,6 @@ public class MergeSort<T extends Comparable<T>> implements SortingMethod<T> {
 
     /**
      * Merges two sorted lists into a single sorted list.
-     *
      * @param left  - The left sublist.
      * @param right - The right sublist.
      * @return - A merged and sorted list.

@@ -11,6 +11,7 @@ public class Node<T extends Comparable<T>> {
         this.right = null;
     }
 
+    // Getters and setters
     public T getData() {
         return this.data;
     }

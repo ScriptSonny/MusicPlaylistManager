@@ -12,7 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataImporter {
-    // CSV Import function
+    /**
+     * Load songs from a CSV file.
+     * @param file - The CSV file containing song data.
+     * @return - A list of Song objects.
+     */
     public static List<Song> loadSongsFromCSV(File file) {
         List<Song> songs = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {

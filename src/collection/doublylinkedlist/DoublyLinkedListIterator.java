@@ -11,10 +11,18 @@ public class DoublyLinkedListIterator<T> implements Iterator<T> {
         this.currentNode.setNext(head);
     }
 
+    /**
+     * Returns the current node
+     * @return the current node
+     */
     public Node<T> getCurrentNode() {
         return this.currentNode;
     }
 
+    /**
+     * Checks if there is a next node
+     * @return true if there is a next node
+     */
     @Override
     public boolean hasNext() {
         if (currentNode == null) {
@@ -23,6 +31,10 @@ public class DoublyLinkedListIterator<T> implements Iterator<T> {
         return currentNode.getNext() != null;
     }
 
+    /**
+     * Returns the next node
+     * @return the next node
+     */
     @Override
     public T next() {
         if (!hasNext()) {

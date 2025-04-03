@@ -25,6 +25,13 @@ public class BinarySearch<T extends Comparable<T>> implements SearchMethod<T> {
         return validSongs;
     }
 
+    /**
+     * Recursively searches the binary search tree for songs that match the query.
+     * @param node the current node in the binary search tree
+     * @param query the search query
+     * @param results the search results to be populated
+     * @param comparator the comparator used to compare songs with the query
+     */
     private void searchRecursive(Node<T> node, String query, SearchResult<T> results, QueryComparator<T> comparator) {
         if (node == null) {
             return;

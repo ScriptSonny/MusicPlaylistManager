@@ -21,6 +21,7 @@ public class Song implements Comparable<Song> {
         this.popularity = popularity;
     }
 
+    // Getters and setters
     public String getTitle() {
         return title;
     }
@@ -61,11 +62,20 @@ public class Song implements Comparable<Song> {
         this.popularity = popularity;
     }
 
+    /**
+     * Returns a string representation of the song.
+     * @return a string representation of the song
+     */
     @Override
     public String toString() {
         return "🎵 " + getTitle() + " - " + getArtist().getName();
     }
 
+    /**
+     * Compares this song with another song for order.
+     * @param other the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this song is less than,
+     */
     @Override
     public int compareTo(Song other) {
         int titleComparison = this.title.compareToIgnoreCase(other.title);

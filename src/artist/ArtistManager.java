@@ -17,6 +17,7 @@ public class ArtistManager {
         return ArtistManager.instance;
     }
 
+    // Getters and setters
     public HashSet<Artist> getArtists() {
         return this.artists;
     }

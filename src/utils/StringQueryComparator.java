@@ -1,5 +1,8 @@
 package utils;
 
+/**
+ * Utility class for comparing two strings.
+ */
 public class StringQueryComparator {
     public static boolean compare(String a, String b) {
         a = a.toLowerCase();

@@ -15,7 +15,11 @@ public class HashSet<T> implements Set<T> {
         this.size = 0;
     }
 
-    // Adds an element to this set.
+    /**
+     * Adds the specified element to this set if it is not already present.
+     * @param t element whose presence in this collection is to be ensured
+     * @return true if this set did not already contain the specified element
+     */
     @Override
     public boolean add(T t) {
         // Element already exists
@@ -29,7 +33,9 @@ public class HashSet<T> implements Set<T> {
         return true;
     }
 
-    // Update size of this set if necessary.
+    /**
+     * Ensures that the internal array has enough space to store the elements.
+     */
     private void ensureSize() {
         if (this.size == this.elements.length) {
             // Store a copy of the original array with double size
@@ -37,7 +43,11 @@ public class HashSet<T> implements Set<T> {
         }
     }
 
-    // Adds all elements from the given collection to this set.
+    /**
+     * Adds all the elements in the specified collection to this set.
+     * @param c collection containing elements to be added to this collection
+     * @return true if this set changed as a result of the call
+     */
     @Override
     public boolean addAll(Collection<? extends T> c) {
         boolean modified = false;
@@ -49,14 +59,20 @@ public class HashSet<T> implements Set<T> {
         return modified;
     }
 
-    // Clears this set.
+    /**
+     * Removes all elements from this set.
+     */
     @Override
     public void clear() {
         this.elements = (T[]) new Object[DEFAULT_SIZE];
         this.size = 0;
     }
 
-    // Checks if this set contains a given element
+    /**
+     * Checks if this set contains the specified element.
+     * @param o element whose presence in this set is to be tested
+     * @return true if this set contains the specified element
+     */
     @Override
     public boolean contains(Object o) {
         for (int i = 0; i < this.size; i++) {
@@ -67,7 +83,11 @@ public class HashSet<T> implements Set<T> {
         return false;
     }
 
-    // Checks if this set contains all the elements from the other collection
+    /**
+     * Checks if this set contains all elements in the specified collection.
+     * @param c collection to be checked for containment in this set
+     * @return true if this set contains all elements in the specified collection
+     */
     @Override
     public boolean containsAll(Collection<?> c) {
         Iterator<?> i = c.iterator();
@@ -79,13 +99,20 @@ public class HashSet<T> implements Set<T> {
         return true;
     }
 
-    // Checks if this set is empty
+    /**
+     * Checks if this set is empty.
+     * @return true if this set contains no elements
+     */
     @Override
     public boolean isEmpty() {
         return this.size == 0;
     }
 
-    // Remove the given element from this set
+    /**
+     * Checks if this set contains the specified element.
+     * @param o element whose presence in this set is to be tested
+     * @return true if this set contains the specified element
+     */
     @Override
     public boolean remove(Object o) {
         for (int i = 0; i < this.size; i++) {
@@ -101,7 +128,11 @@ public class HashSet<T> implements Set<T> {
         return false;
     }
 
-    // Remove all the elements in the given collection from this set
+    /**
+     * Removes all elements in the specified collection from this set.
+     * @param c collection containing elements to be removed from this set
+     * @return true if this set changed as a result of the call
+     */
     @Override
     public boolean removeAll(Collection<?> c) {
         boolean modified = false;
@@ -114,7 +145,11 @@ public class HashSet<T> implements Set<T> {
         return modified;
     }
 
-    // Retain only the elements that are also contained in the given collection
+    /**
+     * Retains only the elements in this set that are contained in the specified collection.
+     * @param c collection containing elements to be retained in this set
+     * @return true if this set changed as a result of the call
+     */
     @Override
     public boolean retainAll(Collection<?> c) {
         boolean modified = false;
@@ -128,19 +163,29 @@ public class HashSet<T> implements Set<T> {
         return modified;
     }
 
-    // Get the size of the set
+    /**
+     * Returns the number of elements in this set.
+     * @return the number of elements in this set
+     */
     @Override
     public int size() {
         return this.size;
     }
 
-    // Get an iterator over the elements of the set
+    /**
+     * Returns an array containing all elements in this set.
+     * @return an array containing all elements in this set
+     */
     @Override
     public HashSetIterator<T> iterator() {
         return new HashSetIterator<T>(this);
     }
 
-    // Check if this set is equal to another object.
+    /**
+     * Checks if this set is equal to the specified object.
+     * @param o object to be compared for equality with this set
+     * @return true if the specified object is equal to this set
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -153,7 +198,10 @@ public class HashSet<T> implements Set<T> {
         return this.containsAll(that) && that.containsAll(this);
     }
 
-    // Hash code for this set
+    /**
+     * Returns the hash code value for this set.
+     * @return the hash code value for this set
+     */
     @Override
     public int hashCode() {
         int hashCode = 0;
@@ -167,7 +215,10 @@ public class HashSet<T> implements Set<T> {
         return hashCode;
     }
 
-    // Converts this set to a string
+    /**
+     * Returns a string representation of this set.
+     * @return a string representation of this set
+     */
     @Override
     public String toString() {
         String ret = "";
@@ -178,13 +229,23 @@ public class HashSet<T> implements Set<T> {
         return "HashSet{" + ret + "Size: " + this.size() + '}';
     }
 
-    // Convert this set to an array
+    /**
+     * Returns an array containing all elements in this set.
+     * @return an array containing all elements in this set
+     */
     @Override
     public Object[] toArray() {
         return Arrays.copyOf(this.elements, this.size);
     }
 
-    // Convert this set to an array of a specific type
+    /**
+     * Returns an array containing all elements in this set.
+     * @param a the array into which the elements of this set are to be
+     *        stored, if it is big enough; otherwise, a new array of the same
+     *        runtime type is allocated for this purpose.
+     * @return an array containing all elements in this set
+     * @param <E> the runtime type of the array to contain the elements of this set
+     */
     @Override
     public <E> E[] toArray(E[] a) {
         if (a.length < this.size) {

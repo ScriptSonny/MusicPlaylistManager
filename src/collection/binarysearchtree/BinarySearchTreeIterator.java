@@ -12,6 +12,10 @@ public class BinarySearchTreeIterator<T extends Comparable<T>> implements Iterat
         pushLeftNodes(root);
     }
 
+    /**
+     * Push all left nodes of the given node onto the stack
+     * @param node - the current node
+     */
     private void pushLeftNodes(Node<T> node) {
         while (node != null) {
             this.stack.push(node);
@@ -19,11 +23,19 @@ public class BinarySearchTreeIterator<T extends Comparable<T>> implements Iterat
         }
     }
 
+    /**
+     * Check if the stack is empty
+     * @return - true if the stack is empty, false otherwise
+     */
     @Override
     public boolean hasNext() {
         return !this.stack.isEmpty();
     }
 
+    /**
+     * Get the next element in the stack
+     * @return - the next element
+     */
     @Override
     public T next() {
         if (!this.hasNext()) {

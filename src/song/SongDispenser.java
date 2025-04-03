@@ -17,6 +17,10 @@ public class SongDispenser {
         this.songContainer = new Album<Song>(new DoublyLinkedList<>());
     }
 
+    /**
+     * Singleton pattern to get the instance of SongDispenser.
+     * @return the instance of SongDispenser
+     */
     public static SongDispenser getInstance() {
         if (SongDispenser.instance == null) {
             SongDispenser.instance = new SongDispenser();
@@ -33,7 +37,13 @@ public class SongDispenser {
         this.songContainer = songContainer;
     }
 
-    // Methods
+    /**
+     * Adds a new song to the collection.
+     * @param query the query to search for
+     * @param method the search method to use
+     * @param comparator the comparator to use for sorting
+     * @return the search result
+     */
     public SearchResult<Song> search(String query, SearchMethod<Song> method, QueryComparator<Song> comparator) {
         if (method instanceof BinarySearch) {
             BinarySearchTree<Song> bst = new BinarySearchTree<>();
@@ -44,6 +54,12 @@ public class SongDispenser {
         }
     }
 
+    /**
+     * Sorts the songs in the collection using the specified sorting method and comparator.
+     * @param method the sorting method to use
+     * @param comparator the comparator to use for sorting
+     * @return the sort result
+     */
     public SortResult<Song> sort(SortingMethod<Song> method, Comparator<Song> comparator) {
         return method.sort(songContainer.getSongs(), comparator);
     }

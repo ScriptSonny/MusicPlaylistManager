@@ -7,6 +7,7 @@ public class Artist {
         this.name = name;
     }
 
+    // Getters and setters
     public String getName() {
         return this.name;
     }

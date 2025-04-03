@@ -11,6 +11,7 @@ public class Node<T> {
         this.next = null;
     }
 
+    // Getters and setters
     public T getData() {
         return this.data;
     }

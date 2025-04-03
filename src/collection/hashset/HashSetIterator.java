@@ -14,11 +14,19 @@ public class HashSetIterator<T> implements Iterator<T> {
         this.array = (T[]) this.set.toArray();
     }
 
+    /**
+     * Returns true if the iteration has more elements.
+     * @return true if the iteration has more elements
+     */
     @Override
     public boolean hasNext() {
         return this.currentIndex < this.set.size();
     }
 
+    /**
+     * Returns the next element in the iteration.
+     * @return the next element in the iteration
+     */
     @Override
     public T next() {
         if (!hasNext()) {
@@ -27,6 +35,9 @@ public class HashSetIterator<T> implements Iterator<T> {
         return this.array[currentIndex++];
     }
 
+    /**
+     * Removes the last element returned by this iterator from the underlying collection.
+     */
     @Override
     public void remove() {
         if (this.currentIndex <= 0) {

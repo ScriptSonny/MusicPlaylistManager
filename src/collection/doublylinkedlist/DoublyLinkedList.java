@@ -11,6 +11,9 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         this.clear();
     }
 
+    /**
+     * Returns the number of elements in this collection
+     */
     @Override
     public int size() {
         if (this.head == null) {
@@ -27,11 +30,20 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return count;
     }
 
+    /**
+     * Checks if the list is empty
+     * @return true if the list is empty
+     */
     @Override
     public boolean isEmpty() {
         return this.head == null && this.tail == null;
     }
 
+    /**
+     * Checks if the list contains the specified element
+     * @param o the object to check
+     * @return true if this list contains the specified element
+     */
     @Override
     public boolean contains(Object o) {
         if (o == null) {
@@ -46,11 +58,18 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return false;
     }
 
+    /**
+     * Returns an iterator over the elements in this collection
+     */
     @Override
     public DoublyLinkedListIterator<T> iterator() {
         return new DoublyLinkedListIterator<T>(this.head);
     }
 
+    /**
+     * Converts the list to an array
+     * @return the array containing all elements in this list
+     */
     @Override
     public Object[] toArray() {
         Object[] array = new Object[this.size()];
@@ -62,6 +81,11 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return array;
     }
 
+    /**
+     * Converts the list to an array of the specified type
+     * @param a the array to be filled
+     * @return the array containing all elements in this list
+     */
     @Override
     public <T1> T1[] toArray(T1[] a) {
         if (a.length < this.size()) {
@@ -75,7 +99,11 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return a;
     }
 
-
+    /**
+     * Adds the specified element to this collection
+     * @param t element to be added
+     * @return true if this collection changed as a result of the call
+     */
     @Override
     public boolean add(T t) {
         Node newNode = new Node(t);
@@ -90,6 +118,11 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return true;
     }
 
+    /**
+     * Removes the first occurrence of the specified element from this collection, if it is present
+     * @param o element to be removed from this collection, if present
+     * @return true if this collection contained the specified element
+     */
     @Override
     public boolean remove(Object o) {
         DoublyLinkedListIterator<T> iterator = this.iterator();
@@ -126,6 +159,10 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return false;
     }
 
+    /**
+     * @param c the collection to check
+     * @return true if this list contains all elements in the specified collection
+     */
     @Override
     public boolean containsAll(Collection<?> c) {
         Iterator<?> i = c.iterator();
@@ -137,6 +174,11 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return true;
     }
 
+    /**
+     * Adds all elements in the specified collection to this list
+     * @param c the collection to add
+     * @return true if this list was modified as a result of the call
+     */
     @Override
     public boolean addAll(Collection<? extends T> c) {
         boolean success = false;
@@ -149,6 +191,11 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return success;
     }
 
+    /**
+     * Removes all elements in the specified collection from this list
+     * @param c the collection to remove
+     * @return true if this list was modified as a result of the call
+     */
     @Override
     public boolean removeAll(Collection<?> c) {
         boolean success = false;
@@ -161,6 +208,11 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return success;
     }
 
+    /**
+     * Retains only the elements in this list that are contained in the specified collection
+     * @param c the collection to retain
+     * @return true if this list was modified as a result of the call
+     */
     @Override
     public boolean retainAll(Collection<?> c) {
         boolean modified = false;
@@ -175,12 +227,18 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
     }
 
 
+    /**
+     * Removes all elements from the list
+     */
     @Override
     public void clear() {
         this.head = null;
         this.tail = null;
     }
 
+    /**
+     * @return the string representation of the list
+     */
     @Override
     public String toString() {
         String ret = "";
@@ -191,10 +249,16 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         return "DoublyLinkedList{" + ret + "Head: " + this.getHead() + ", Tail: " + this.getTail() + '}';
     }
 
+    /**
+     * @return the head of the list
+     */
     public Node<T> getHead() {
         return this.head;
     }
 
+    /**
+     * @return the tail of the list
+     */
     public Node<T> getTail() {
         return this.tail;
     }
