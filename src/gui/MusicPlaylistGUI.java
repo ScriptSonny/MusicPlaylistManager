@@ -309,7 +309,7 @@ public class MusicPlaylistGUI extends JFrame {
                 return;
         }
 
-        String[] comparatorOptions = {"Title", "Artist", "Year", "Popularity"};
+        String[] comparatorOptions = {"Title", "Artist", "Duration", "Popularity"};
         String comparatorChoice = (String) JOptionPane.showInputDialog(
                 this,
                 "Select a sort criterion:",
@@ -325,7 +325,7 @@ public class MusicPlaylistGUI extends JFrame {
 
         Comparator<Song> comparator = switch (comparatorChoice) {
             case "Artist" -> SongComparators.BY_ARTIST;
-            case "Year" -> SongComparators.BY_DURATION;
+            case "Duration" -> SongComparators.BY_DURATION;
             case "Popularity" -> SongComparators.BY_POPULARITY;
             default -> SongComparators.BY_TITLE;
         };
