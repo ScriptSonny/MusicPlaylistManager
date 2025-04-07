@@ -176,8 +176,8 @@ public class MusicPlaylistGUI extends JFrame {
         // Set the loaded songs into SongDispenser via a new Playlist
         Playlist<Song> container = new Playlist<>(songs);
         SongDispenser.getInstance().setSongContainer(container);
+
         updateGUI(songs);
-        SongDispenser.getInstance().setSongContainer(new Playlist<>(songs));
 
         JOptionPane.showMessageDialog(this, "🎧 Dataset loaded from: " + file.getName());
     }
@@ -262,13 +262,16 @@ public class MusicPlaylistGUI extends JFrame {
         updateGUI(result.getSongs());
 
         JOptionPane.showMessageDialog(this,
-                "🔍 Found " + foundSongs + " out of " + container.getSongs().size() + " songs.\n" +
+                "🔍 Search Method: " + methodChoice + "\n" +
+                        "🔍 Search Field: " + fieldChoice + "\n" +
+                        "🔍 Found " + foundSongs + " out of " + container.getSongs().size() + " songs.\n" +
                         "⏳ Search took: " + timeTaken + " ms.\n" +
                         "🕒 Time Complexity: " + timeComplexity + ".");
     }
 
     /**
-     * Method to sort all songs in a Playlist based on user choice.
+     * Opens a dialog to let the user select a sorting algorithm and comparator field,
+     * then applies the selected sorting algorithm via the SongDispenser and updates the GUI.
      */
     private void sortPlaylist() {
         String[] sortingMethods = {"QuickSort", "MergeSort", "BubbleSort"};
@@ -366,6 +369,8 @@ public class MusicPlaylistGUI extends JFrame {
      * Uses a Swing Timer to simulate playback in real-time
      */
     private void playSongs() {
+        if (SongDispenser.getInstance().getSongContainer() == null) return;
+
         if (playlistModel.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No songs to play!");
             return;
@@ -424,6 +429,8 @@ public class MusicPlaylistGUI extends JFrame {
      * @return found Song object
      */
     private Song findSongByText(String songText) {
+        if (SongDispenser.getInstance().getSongContainer() == null) return null;
+
         SongContainer<Song> container = SongDispenser.getInstance().getSongContainer();
         if (container == null || container.getSongs().isEmpty()) return null;
 
