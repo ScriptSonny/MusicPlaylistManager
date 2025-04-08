@@ -2,7 +2,6 @@ package search;
 
 import collection.binarysearchtree.BinarySearchTree;
 import collection.binarysearchtree.Node;
-import song.SearchResult;
 import song.querycomparator.QueryComparator;
 
 import java.util.Collection;

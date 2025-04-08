@@ -1,7 +1,6 @@
 package sorting;
 
 import collection.doublylinkedlist.DoublyLinkedList;
-import song.SortResult;
 
 import java.util.ArrayList;
 import java.util.Collection;

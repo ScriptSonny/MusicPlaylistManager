@@ -1,7 +1,5 @@
 package sorting;
 
-import song.SortResult;
-
 import java.util.Collection;
 import java.util.Comparator;
 

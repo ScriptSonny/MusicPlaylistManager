@@ -4,19 +4,15 @@ import collection.binarysearchtree.BinarySearchTree;
 import collection.doublylinkedlist.DoublyLinkedList;
 import enums.DataStructureType;
 import enums.PlayerState;
-import search.BinarySearch;
-import search.HashMapSearch;
-import search.LinearSearch;
-import search.SearchMethod;
+import search.*;
 import song.*;
 import song.querycomparator.ArtistQueryComparator;
 import song.querycomparator.GenreQueryComparator;
 import song.querycomparator.QueryComparator;
 import song.querycomparator.TitleQueryComparator;
-import sorting.BubbleSort;
-import sorting.MergeSort;
-import sorting.QuickSort;
-import sorting.SortingMethod;
+import song.songcontainer.Playlist;
+import song.songcontainer.SongContainer;
+import sorting.*;
 import utils.DataImporter;
 
 import javax.swing.*;
@@ -98,13 +94,6 @@ public class MusicPlaylistGUI extends JFrame {
                     }
                 }
             }
-        });
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MusicPlaylistGUI gui = new MusicPlaylistGUI();
-            gui.setVisible(true);
         });
     }
 

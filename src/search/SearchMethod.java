@@ -1,6 +1,5 @@
 package search;
 
-import song.SearchResult;
 import song.querycomparator.QueryComparator;
 
 import java.util.Collection;

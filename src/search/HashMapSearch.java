@@ -1,7 +1,6 @@
 package search;
 
 import collection.doublylinkedlist.DoublyLinkedList;
-import song.SearchResult;
 import song.querycomparator.QueryComparator;
 
 import java.util.Collection;

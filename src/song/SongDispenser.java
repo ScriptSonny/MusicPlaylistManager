@@ -4,7 +4,11 @@ import collection.binarysearchtree.BinarySearchTree;
 import collection.doublylinkedlist.DoublyLinkedList;
 import search.BinarySearch;
 import search.SearchMethod;
+import search.SearchResult;
 import song.querycomparator.QueryComparator;
+import song.songcontainer.Album;
+import song.songcontainer.SongContainer;
+import sorting.SortResult;
 import sorting.SortingMethod;
 
 import java.util.Comparator;
