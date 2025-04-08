@@ -150,7 +150,6 @@ public class MusicPlaylistGUI extends JFrame {
     /**
      * Loads the songs from the dataset and puts them in the SongDispenser.
      * Also updates the GUI to reflect the loaded songs.
-     *
      * @param file - the selected dataset file.
      */
     private void loadDataFromFile(File file) {
@@ -173,7 +172,6 @@ public class MusicPlaylistGUI extends JFrame {
     /**
      * Opens a dialogue to choose a search method.
      * Then renders the found songs using the given query.
-     *
      * @param query - search query.
      */
     private void searchFromData(String query) {
@@ -336,7 +334,6 @@ public class MusicPlaylistGUI extends JFrame {
 
     /**
      * Clears the current view, then renders the given songs.
-     *
      * @param songs - Collection of songs to render.
      */
     private void updateGUI(Collection<Song> songs) {
@@ -413,7 +410,6 @@ public class MusicPlaylistGUI extends JFrame {
 
     /**
      * Searches Song-object that equals with the text in the list
-     *
      * @param songText text to search for
      * @return found Song object
      */
@@ -433,7 +429,6 @@ public class MusicPlaylistGUI extends JFrame {
 
     /**
      * Play a specific song at the given index.
-     *
      * @param song      song to play
      * @param songIndex index of the song
      */
@@ -485,7 +480,6 @@ public class MusicPlaylistGUI extends JFrame {
 
     /**
      * measure execution time of algorithms
-     *
      * @param action what to measure
      * @return time in milliseconds
      */

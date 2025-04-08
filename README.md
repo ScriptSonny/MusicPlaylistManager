@@ -57,8 +57,8 @@ Blinding Lights,The Weeknd,POP,200,95
    cd MusicPlaylistManager
    ```
 2. **Open the project**
-3. **Build and run the application (``MusicPlaylistGUI``)**
-4. **Load your playlist**
+3. **Build and run the application (``Main``)**
+4. **Load your playlist (Check the ``Resources`` folder for an example)**
 
 ### 🧪 Testing the application
 * Try searching songs by Title, Artist, or Genre.
