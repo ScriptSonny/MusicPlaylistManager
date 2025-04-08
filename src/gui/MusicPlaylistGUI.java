@@ -79,16 +79,15 @@ public class MusicPlaylistGUI extends JFrame {
 
         add(controlPanel, BorderLayout.SOUTH);
 
-        loadButton.addActionListener(_ -> selectDataStructureAndLoadFile());
-        searchButton.addActionListener(_ -> searchFromData(searchField.getText()));
-        playButton.addActionListener(_ -> playSongs());
-        sortButton.addActionListener(_ -> sortPlaylist());
+        loadButton.addActionListener(_e -> selectDataStructureAndLoadFile());
+        searchButton.addActionListener(_e -> searchFromData(searchField.getText()));
+        playButton.addActionListener(_e -> playSongs());
+        sortButton.addActionListener(_e -> sortPlaylist());
 
         playlistDisplay.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) // double click
-                {
+                if (e.getClickCount() == 2) { // double click
                     int index = playlistDisplay.locationToIndex(e.getPoint());
                     if (index != -1) {
                         String selectedSongText = playlistModel.get(index);
@@ -290,23 +289,24 @@ public class MusicPlaylistGUI extends JFrame {
 
         SortingMethod<Song> sortingMethod;
         String timeComplexity;
-
+        
         switch (methodChoice) {
-            case "QuickSort":
+            case "QuickSort" -> {
                 sortingMethod = new QuickSort<>();
                 timeComplexity = "Average: O(n log n), Worst: O(n²)";
-                break;
-            case "MergeSort":
+            }
+            case "MergeSort" -> {
                 sortingMethod = new MergeSort<>();
                 timeComplexity = "O(n log n)";
-                break;
-            case "BubbleSort":
+            }
+            case "BubbleSort" -> {
                 sortingMethod = new BubbleSort<>();
                 timeComplexity = "O(n²) (Worst case)";
-                break;
-            default:
+            }
+            default -> {
                 JOptionPane.showMessageDialog(this, "⚠ Invalid choice!");
                 return;
+            }
         }
 
         String[] comparatorOptions = {"Title", "Artist", "Duration", "Popularity"};
@@ -389,7 +389,7 @@ public class MusicPlaylistGUI extends JFrame {
         playerState = PlayerState.PLAYING;
         playButton.setText("▶ Play");
 
-        playTimer = new Timer(1000, _ -> {
+        playTimer = new Timer(1000, _e -> {
             if (playerState != PlayerState.PLAYING) return;
 
             if (index.get() >= playlistModel.getSize()) {
@@ -467,7 +467,7 @@ public class MusicPlaylistGUI extends JFrame {
         nowPlayingLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
         nowPlayingLabel.setText("Now Playing: 🎵 " + song.getTitle() + " (" + remainingDuration.get() + "s left)");
 
-        playTimer = new Timer(1000, _ -> {
+        playTimer = new Timer(1000, _e -> {
             if (playerState != PlayerState.PLAYING) return;
 
             remainingDuration.getAndDecrement();

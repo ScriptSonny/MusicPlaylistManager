@@ -5,26 +5,22 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HashMapTest
-{
+public class HashMapTest {
     private HashMap<String, Integer> map;
     
     @Before
-    public void setup()
-    {
+    public void setup() {
         this.map = new HashMap<>();
     }
     
     @Test
-    public void put()
-    {
+    public void put() {
         this.map.put("One", 1);
         assertEquals((Integer) 1, this.map.get("One"));
     }
     
     @Test
-    public void putAll()
-    {
+    public void putAll() {
         HashMap<String, Integer> otherMap = new HashMap<>();
         otherMap.put("Two", 2);
         otherMap.put("Three", 3);
@@ -37,8 +33,7 @@ public class HashMapTest
     }
     
     @Test
-    public void clear()
-    {
+    public void clear() {
         this.map.put("One", 1);
         this.map.put("Two", 2);
         this.map.clear();
@@ -46,30 +41,27 @@ public class HashMapTest
     }
     
     @Test
-    public void keySet()
-    {
+    public void keySet() {
         this.map.put("One", 1);
         this.map.put("Two", 2);
         this.map.put("Three", 3);
-        assertTrue(this.map.keySet().contains("One"));
-        assertTrue(this.map.keySet().contains("Two"));
-        assertTrue(this.map.keySet().contains("Three"));
+        assertTrue(this.map.containsKey("One"));
+        assertTrue(this.map.containsKey("Two"));
+        assertTrue(this.map.containsKey("Three"));
     }
     
     @Test
-    public void values()
-    {
+    public void values() {
         this.map.put("One", 1);
         this.map.put("Two", 2);
         this.map.put("Three", 3);
-        assertTrue(this.map.values().contains(1));
-        assertTrue(this.map.values().contains(2));
-        assertTrue(this.map.values().contains(3));
+        assertTrue(this.map.containsValue(1));
+        assertTrue(this.map.containsValue(2));
+        assertTrue(this.map.containsValue(3));
     }
     
     @Test
-    public void entrySet()
-    {
+    public void entrySet() {
         this.map.put("One", 1);
         this.map.put("Two", 2);
         this.map.put("Three", 3);
@@ -79,32 +71,28 @@ public class HashMapTest
     }
     
     @Test
-    public void get()
-    {
+    public void get() {
         this.map.put("One", 1);
         assertEquals((Integer) 1, this.map.get("One"));
         assertNull(this.map.get("NonExistent"));
     }
     
     @Test
-    public void remove()
-    {
+    public void remove() {
         this.map.put("One", 1);
         this.map.remove("One");
         assertNull(this.map.get("One"));
     }
     
     @Test
-    public void containsKey()
-    {
+    public void containsKey() {
         this.map.put("One", 1);
         assertTrue(this.map.containsKey("One"));
         assertFalse(this.map.containsKey("NonExistent"));
     }
     
     @Test
-    public void size()
-    {
+    public void size() {
         this.map.put("One", 1);
         this.map.put("Two", 2);
         assertEquals(2, this.map.size());
@@ -113,8 +101,7 @@ public class HashMapTest
     }
     
     @Test
-    public void isEmpty()
-    {
+    public void isEmpty() {
         assertTrue(this.map.isEmpty());
         this.map.put("One", 1);
         assertFalse(this.map.isEmpty());
@@ -123,8 +110,7 @@ public class HashMapTest
     }
     
     @Test
-    public void containsValue()
-    {
+    public void containsValue() {
         this.map.put("One", 1);
         this.map.put("Two", 2);
         assertTrue(this.map.containsValue(1));

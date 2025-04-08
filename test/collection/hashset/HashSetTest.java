@@ -8,25 +8,20 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class HashSetTest
-{
+public class HashSetTest {
     private HashSet<Integer> set;
     @Before
-    public void setup()
-    {
-        this.set = new HashSet<Integer>();
+    public void setup() {
+        this.set = new HashSet<>();
     }
     
     @Test
-    public void add()
-    {
+    public void add() {
         assertEquals(0, this.set.size());
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             this.set.add(i);
         }
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             assertEquals(i, this.set.toArray()[i]);
         }
         assertEquals(10, this.set.size());
@@ -34,28 +29,23 @@ public class HashSetTest
     }
     
     @Test
-    public void addAll()
-    {
+    public void addAll() {
         assertEquals(0, this.set.size());
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        for (int i = 0; i < 10; i++)
-        {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
             list.add(i);
         }
         this.set.addAll(list);
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             assertEquals(i, this.set.toArray()[i]);
         }
         assertEquals(10, this.set.size());
     }
     
     @Test
-    public void clear()
-    {
+    public void clear() {
         assertEquals(0, this.set.size());
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             this.set.add(i);
         }
         assertEquals(10, this.set.size());
@@ -64,19 +54,16 @@ public class HashSetTest
     }
     
     @Test
-    public void contains()
-    {
+    public void contains() {
         assertFalse(this.set.contains(0));
         this.set.add(0);
         assertTrue(this.set.contains(0));
     }
     
     @Test
-    public void containsAll()
-    {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        for (int i = 0; i < 10; i++)
-        {
+    public void containsAll() {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
             list.add(i);
         }
         assertFalse(this.set.containsAll(list));
@@ -89,16 +76,14 @@ public class HashSetTest
     }
     
     @Test
-    public void isEmpty()
-    {
+    public void isEmpty() {
         assertTrue(this.set.isEmpty());
         this.set.add(0);
         assertFalse(this.set.isEmpty());
     }
     
     @Test
-    public void remove()
-    {
+    public void remove() {
         this.set.add(5);
         assertTrue(this.set.contains(5));
         this.set.remove(5);
@@ -108,8 +93,7 @@ public class HashSetTest
     }
     
     @Test
-    public void removeAll()
-    {
+    public void removeAll() {
         this.set.add(1);
         this.set.add(2);
         this.set.add(3);
@@ -138,8 +122,7 @@ public class HashSetTest
     }
     
     @Test
-    public void size()
-    {
+    public void size() {
         assertEquals(0, this.set.size());
         this.set.add(1);
         assertEquals(1, this.set.size());
@@ -150,8 +133,7 @@ public class HashSetTest
     }
     
     @Test
-    public void iterator()
-    {
+    public void iterator() {
         this.set.add(1);
         this.set.add(2);
         this.set.add(3);
@@ -167,23 +149,21 @@ public class HashSetTest
     }
     
     @Test
-    public void testEquals()
-    {
+    public void testEquals() {
         HashSet<Integer> otherSet = new HashSet<>();
-        assertTrue(this.set.equals(otherSet));  // both are empty sets
+        assertEquals(this.set, otherSet);
         this.set.add(1);
         otherSet.add(1);
-        assertTrue(this.set.equals(otherSet));
+        assertEquals(this.set, otherSet);
         this.set.add(2);
         otherSet.add(2);
-        assertTrue(this.set.equals(otherSet));
+        assertEquals(this.set, otherSet);
         otherSet.add(3);
-        assertFalse(this.set.equals(otherSet));
+        assertNotEquals(this.set, otherSet);
     }
     
     @Test
-    public void testHashCode()
-    {
+    public void testHashCode() {
         this.set.add(1);
         this.set.add(2);
         HashSet<Integer> otherSet = new HashSet<>();
@@ -195,8 +175,7 @@ public class HashSetTest
     }
     
     @Test
-    public void testToString()
-    {
+    public void testToString() {
         assertEquals("HashSet{Size: 0}", this.set.toString());
         this.set.add(1);
         this.set.add(2);
@@ -208,11 +187,11 @@ public class HashSetTest
         assertTrue(actual.contains("1"));
         assertTrue(actual.contains("2"));
         assertTrue(actual.contains("3"));
+        assertEquals(expected, actual);
     }
     
     @Test
-    public void toArray()
-    {
+    public void toArray() {
         this.set.add(1);
         this.set.add(2);
         this.set.add(3);
@@ -224,8 +203,7 @@ public class HashSetTest
     }
     
     @Test
-    public void testToArray()
-    {
+    public void testToArray() {
         this.set.add(1);
         this.set.add(2);
         this.set.add(3);

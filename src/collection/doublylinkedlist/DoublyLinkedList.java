@@ -219,7 +219,7 @@ public class DoublyLinkedList<T extends Comparable<T>> implements Collection<T> 
         DoublyLinkedListIterator<T> iterator = this.iterator();
         while (iterator.hasNext()) {
             if (!c.contains(iterator.next())) {
-                iterator.remove();
+                this.remove(iterator.getCurrentNode().getData());
                 modified = true;
             }
         }

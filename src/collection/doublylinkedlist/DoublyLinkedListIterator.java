@@ -25,10 +25,10 @@ public class DoublyLinkedListIterator<T> implements Iterator<T> {
      */
     @Override
     public boolean hasNext() {
-        if (currentNode == null) {
+        if (this.currentNode == null) {
             return false;
         }
-        return currentNode.getNext() != null;
+        return this.currentNode.getNext() != null;
     }
 
     /**

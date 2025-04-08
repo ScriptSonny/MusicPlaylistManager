@@ -5,69 +5,61 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class BinarySearchTreeTest
-{
+public class BinarySearchTreeTest {
     private BinarySearchTree<Integer> tree;
     
     @Before
-    public void setup()
-	{
+    public void setup() {
         this.tree = new BinarySearchTree<Integer>();
     }
     
     @Test
-    public void getRoot()
-	{
-        assertNull(tree.getRoot());
+    public void getRoot() {
+        assertNull(this.tree.getRoot());
         
-        tree.add(10);
-        assertNotNull(tree.getRoot());
-        assertEquals(Integer.valueOf(10), tree.getRoot().getData());
+        this.tree.add(10);
+        assertNotNull(this.tree.getRoot());
+        assertEquals(Integer.valueOf(10), this.tree.getRoot().getData());
     }
     
     @Test
-    public void findNode()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+    public void findNode() {
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
-        assertNotNull(tree.findNode(tree.getRoot(), 5));
-        assertNotNull(tree.findNode(tree.getRoot(), 15));
-        assertNull(tree.findNode(tree.getRoot(), 100));
+        assertNotNull(this.tree.findNode(this.tree.getRoot(), 5));
+        assertNotNull(this.tree.findNode(this.tree.getRoot(), 15));
+        assertNull(this.tree.findNode(this.tree.getRoot(), 100));
     }
     
     @Test
-    public void size()
-	{
-        assertEquals(0, tree.size());
+    public void size() {
+        assertEquals(0, this.tree.size());
         
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
-        assertEquals(3, tree.size());
+        assertEquals(3, this.tree.size());
     }
     
     @Test
-    public void isEmpty()
-	{
-        assertTrue(tree.isEmpty());
+    public void isEmpty() {
+        assertTrue(this.tree.isEmpty());
         
-        tree.add(10);
-        assertFalse(tree.isEmpty());
+        this.tree.add(10);
+        assertFalse(this.tree.isEmpty());
     }
     
     @Test
-    public void iterator()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+    public void iterator() {
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
         int count = 0;
-        for (Integer value : tree)
-	    {
+        for (Integer _value : this.tree) {
             count++;
         }
         
@@ -75,150 +67,128 @@ public class BinarySearchTreeTest
     }
     
     @Test
-    public void contains()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+    public void contains() {
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
-        assertTrue(tree.contains(10));
-        assertTrue(tree.contains(5));
-        assertTrue(tree.contains(15));
-        assertFalse(tree.contains(100));
+        assertTrue(this.tree.contains(10));
+        assertTrue(this.tree.contains(5));
+        assertTrue(this.tree.contains(15));
+        assertFalse(this.tree.contains(100));
     }
     
     @Test
-    public void toArray()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+    public void toArray() {
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
         Object[] expected = {5, 10, 15};
-        Object[] actual = tree.toArray();
+        Object[] actual = this.tree.toArray();
         
         assertArrayEquals(expected, actual);
     }
     
     @Test
-    public void testToArray()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+    public void add() {
+        this.tree.add(10);
+        this.tree.add(5);
         
-        Object[] expected = {5, 10, 15};
-        Object[] actual = tree.toArray();
-        
-        assertArrayEquals(expected, actual);
+        assertTrue(this.tree.contains(10));
+        assertTrue(this.tree.contains(5));
+        assertEquals(2, this.tree.size());
     }
     
     @Test
-    public void add()
-	{
-        tree.add(10);
-        tree.add(5);
+    public void remove() {
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
-        assertTrue(tree.contains(10));
-        assertTrue(tree.contains(5));
-        assertEquals(2, tree.size());
+        assertTrue(this.tree.contains(10));
+        
+        this.tree.remove(10);
+        assertFalse(this.tree.contains(10));
+        assertEquals(2, this.tree.size());
     }
     
     @Test
-    public void remove()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
-        
-        assertTrue(tree.contains(10));
-        
-        tree.remove(10);
-        assertFalse(tree.contains(10));
-        assertEquals(2, tree.size());
-    }
-    
-    @Test
-    public void containsAll()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+    public void containsAll() {
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
         BinarySearchTree<Integer> otherTree = new BinarySearchTree<>();
         otherTree.add(10);
         otherTree.add(5);
         
-        assertTrue(tree.containsAll(otherTree));
+        assertTrue(this.tree.containsAll(otherTree));
         
         otherTree.add(20);
-        assertFalse(tree.containsAll(otherTree));
+        assertFalse(this.tree.containsAll(otherTree));
     }
     
     @Test
-    public void addAll()
-	{
-        tree.add(10);
-        tree.add(5);
+    public void addAll() {
+        this.tree.add(10);
+        this.tree.add(5);
         
         BinarySearchTree<Integer> otherTree = new BinarySearchTree<>();
         otherTree.add(15);
         otherTree.add(20);
         
-        tree.addAll(otherTree);
+        this.tree.addAll(otherTree);
         
-        assertTrue(tree.contains(15));
-        assertTrue(tree.contains(20));
-        assertEquals(4, tree.size());
+        assertTrue(this.tree.contains(15));
+        assertTrue(this.tree.contains(20));
+        assertEquals(4, this.tree.size());
     }
     
     @Test
-    public void removeAll()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+    public void removeAll() {
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
         BinarySearchTree<Integer> otherTree = new BinarySearchTree<>();
         otherTree.add(5);
         otherTree.add(15);
         
-        tree.removeAll(otherTree);
+        this.tree.removeAll(otherTree);
         
-        assertFalse(tree.contains(5));
-        assertFalse(tree.contains(15));
-        assertEquals(1, tree.size());
+        assertFalse(this.tree.contains(5));
+        assertFalse(this.tree.contains(15));
+        assertEquals(1, this.tree.size());
     }
     
     @Test
-    public void retainAll()
-	{
-        tree.add(10);
-        tree.add(5);
-        tree.add(15);
+    public void retainAll() {
+        this.tree.add(10);
+        this.tree.add(5);
+        this.tree.add(15);
         
         BinarySearchTree<Integer> otherTree = new BinarySearchTree<>();
         otherTree.add(5);
         otherTree.add(15);
         
-        tree.retainAll(otherTree);
+        this.tree.retainAll(otherTree);
         
-        assertTrue(tree.contains(5));
-        assertTrue(tree.contains(15));
-        assertFalse(tree.contains(10));
+        assertTrue(this.tree.contains(5));
+        assertTrue(this.tree.contains(15));
+        assertFalse(this.tree.contains(10));
     }
     
     @Test
-    public void clear()
-	{
-        tree.add(10);
-        tree.add(5);
+    public void clear() {
+        this.tree.add(10);
+        this.tree.add(5);
         
-        assertEquals(2, tree.size());
+        assertEquals(2, this.tree.size());
         
-        tree.clear();
+        this.tree.clear();
         
-        assertTrue(tree.isEmpty());
-        assertEquals(0, tree.size());
+        assertTrue(this.tree.isEmpty());
+        assertEquals(0, this.tree.size());
     }
 }
